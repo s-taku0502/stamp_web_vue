@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width", initial-scale="1.0">
+    <link rel="stylesheet" href="./assets/css/template.css">
+    <link rel="stylesheet" href="./assets/css/contact.css">
+    <title>額地区スタンプらり～</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <block>
+                <div class="logo"><img id="icon" src="./assets/images/circle_app_icon.png">
+                    <p>額地区スタンプらり～</p>
+                </div>
+            </block>
+            <!-- ハンバーガーメニューアイコン -->
+            <div class="menu-toggle" id="menu-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <!-- ナビゲーションリンク -->
+            <ul class="nav-links" id="nav-links">
+                <li><a href="./">ホーム</a></li>
+                <li><a href="./scan.html">スキャナー</a></li>
+                <li><a href="./stamps.html">スタンプ</a></li>
+                <li><a href="./coupons.html">クーポン</a></li>
+                <li><a href="./stores.html">店舗情報</a></li>
+                <li><a href="./contact.html">お問い合わせ</a></li>
+              </ul>
+        </nav>
+    </header>
+    <script src="./assets/js/template.js"></script>
+    <main>
+        <form id="contact-form" method="post" action="https://script.google.com/macros/s/AKfycbypfud-gElSNTgIhY4HnjnLu2cs9YNvFgUgnc9-cExUifcRtatjmLeSGf32Hw_39W8HMA/exec">
+            <!-- お問い合わせ内容の選択 -->
+            <label for="inquiry-type">
+                <a>お問い合わせ内容をお選びください。</a>
+                <span style="color: red;"> *</span>
+                <a class="error-message">この質問は必須です。</a>
+            </label>
+            <select id="inquiry-type" name="inquiry-type" required>
+                <option value="" disabled selected>選択</option>
+                <option value="スタンプらり～情報">スタンプらり～に関するお問い合わせ</option>
+                <option value="出店情報">会員の出店について</option>
+                <option value="活動情報">活動に関するお問い合わせ</option>
+                <option value="個人情報">個人情報に関するお問い合わせ</option>
+                <option value="意見・要望">当ウェブサイトへのご意見・ご要望</option>
+                <option value="その他">その他</option>
+            </select>
+
+            <!-- お問い合わせ内容の記入 -->
+            <label for="inquiry-details">お問い合わせ内容をお書きください。<span style="color: red;"> *</span></label>
+            <textarea id="inquiry-details" name="inquiry-details" rows="4" required></textarea>
+
+            <!-- 至急チェック -->
+            <label for="urgent">
+                <a>至急の内容の場合は☑を入れてください。</a>
+                <a><input type="checkbox" id="urgent" name="urgent" value="至急"></a>
+            </label>
+
+            <hr />
+
+            <!-- 連絡先情報 -->
+            <label for="name">氏名<span style="color: red;"> *</span></label>
+            <input type="text" id="name" name="name" placeholder="額　太郎" required />
+
+            <label for="email">メールアドレス<span style="color: red;"> *</span><p>主催団体より連絡させていただく場合がございます。</p></label>
+            <input type="email" id="email" name="email" placeholder="例）nuka@sample.com" required />
+
+            <label for="organization">所属</label>
+            <input type="text" id="organization" name="organization" placeholder="回答を入力" />
+
+            <label for="phone">お電話番号</label>
+            <input type="tel" id="phone" name="phone" placeholder="回答を入力" />
+
+            <!-- ボタン -->
+            <div class="button-group">
+                <button type="submit">送信</button>
+                <button type="reset">フォームをクリア</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

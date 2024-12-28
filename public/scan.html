@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width", initial-scale="1.0">
+  <title>スタンプらり～</title>
+  <link rel="stylesheet" href="./assets/css/scan.css">
+  <link rel="stylesheet" href="./assets/css/template.css">
+</head>
+<body>
+  <!-- ヘッダー部分 -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <block>
+          <div class="logo"><img id="icon" src="./assets/images/circle_app_icon.png">
+            <p>額地区スタンプらり～</p>
+          </div>
+        </block>
+      </div>
+      <div class="menu-toggle" id="menu-toggle">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="./">ホーム</a></li>
+        <li><a href="./scan.html">スキャナー</a></li>
+        <li><a href="./stamps.html">スタンプ</a></li>
+        <li><a href="./coupons.html">クーポン</a></li>
+        <li><a href="./stores.html">店舗情報</a></li>
+        <li><a href="./contact.html">お問い合わせ</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h1>QRコードをスキャン</h1>
+    <div id="reader"></div>
+    <button id="startButton">スキャン開始</button>
+    <button id="stopButton" disabled>スキャン停止</button>
+    <p id="result">QRコードの内容がここに表示されます。</p>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.7/html5-qrcode.min.js"></script>
+  <script src="./assets/js/scan.js"></script>
+  <script src="./assets/js/template.js"></script>
+</body>
+</html>
