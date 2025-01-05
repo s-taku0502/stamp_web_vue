@@ -5,21 +5,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const resultElement = document.getElementById("result");
 
     const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        resultElement.innerText = `QRコード内容: ${decodedText}`;  // decodedText が読み取った内容
-
-        // 新しいウィンドウでstamp.htmlを開く
-        const stampWindow = window.open('stamp.html', '_blank');
-        
+        resultElement.innerText = `QRコード内容: ${decodedText}`; // decodedText が読み取った内容
+    
+        // 新しいウィンドウで stamps.html を開く
+        const stampWindow = window.open('stamps.html', '_blank');
+    
         // 新しいウィンドウが読み込まれた後にデータを渡す
         stampWindow.onload = () => {
-            stampWindow.postMessage(decodedText, '*');
+            stampWindow.postMessage(decodedText, '*'); // decodedText を送信
         };
-
+    
         console.log(`Decoded result: ${decodedText}`, decodedResult);
         html5QrCode.stop();
         startButton.disabled = false;
         stopButton.disabled = true;
     };
+    
 
     // カメラオプション
     const config = { fps: 10, qrbox: 250 };
@@ -96,4 +97,3 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-
