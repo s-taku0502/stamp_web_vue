@@ -17,7 +17,7 @@ const routes = [
   { path: '/stores',name:'店舗一覧', component: Stores },
   { path: '/contact',name:'お問い合わせ', component: Contact },
   { path: '/register',name:'登録画面', component: Register,},
-  { path: '/login',name:'ログイン画面', component: Login}
+  { path: '/login',name:'ログイン画面', component: Login},
   { path: '/:pathMatch(.*)*',name:'404NotFound', redirect: NotFound },
 ];
 
