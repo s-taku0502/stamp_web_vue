@@ -3,7 +3,6 @@
     <v-container>
         <v-row>
             <v-col>
-                <h1>Coupons</h1>
                 <!-- Add your coupon components or content here -->
             </v-col>
         </v-row>

@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div id="app">
     <header>
       <nav class="navbar">
         <div class="logo">
-          <img id="icon" src="./src/assets/images/circle_app_icon.png" alt="Logo">
+          <img id="icon" src="/assets/images/circle_app_icon.png" alt="Logo" />
           <p>額地区スタンプらり～</p>
         </div>
         <div class="menu-toggle" ref="menuToggle" @click="toggleMenu">
@@ -11,8 +11,8 @@
           <span class="bar"></span>
           <span class="bar"></span>
         </div>
-        <ul class="nav-links" ref="navLinks" :class="{'active': isMenuActive}">
-          <li><router-link to="/home">ホーム</router-link></li>
+        <ul class="nav-links" ref="navLinks" :class="{ active: isMenuActive }">
+          <li><router-link to="/home" tabindex="0">ホーム</router-link></li>
           <li><router-link to="/scan">スキャナー</router-link></li>
           <li><router-link to="/stamps">スタンプ</router-link></li>
           <li><router-link to="/coupons">クーポン</router-link></li>
@@ -22,7 +22,7 @@
       </nav>
     </header>
     <main>
-      こちらは額地区デジタルスタンプらり～のホームページです。
+      <router-view></router-view>
     </main>
     <footer>
       <div class="footer">
@@ -33,54 +33,58 @@
 </template>
 
 <script>
+import { ref, onMounted, onBeforeUnmount } from "vue";
+
 export default {
-  data() {
-    return {
-      isMenuActive: false, // メニューの開閉状態を管理
+  setup() {
+    const isMenuActive = ref(false);
+    const navLinks = ref(null);
+
+    const toggleMenu = () => {
+      isMenuActive.value = !isMenuActive.value;
     };
-  },
-  methods: {
-    // メニューを開閉するメソッド
-    toggleMenu() {
-      this.isMenuActive = !this.isMenuActive;
-    },
-    // メニューアイテムがクリックされた時にメニューを閉じる
-    closeMenu() {
-      this.isMenuActive = false;
-    },
-  },
-  mounted() {
-    // メニューアイテムのクリックイベントを追加
-    const navItems = this.$refs.navLinks.querySelectorAll("li");
 
-    navItems.forEach((item) => {
-      item.addEventListener("click", this.closeMenu);
-    });
-  },
-  beforeDestroy() {
-    // コンポーネントが破棄される際にイベントリスナーをクリーンアップ
-    const navItems = this.$refs.navLinks.querySelectorAll("li");
+    const closeMenu = () => {
+      isMenuActive.value = false;
+    };
 
-    navItems.forEach((item) => {
-      item.removeEventListener("click", this.closeMenu);
+    onMounted(() => {
+      const navItems = navLinks.value.querySelectorAll("li");
+      navItems.forEach((item) => {
+        item.addEventListener("click", closeMenu);
+      });
     });
+
+    onBeforeUnmount(() => {
+      const navItems = navLinks.value.querySelectorAll("li");
+      navItems.forEach((item) => {
+        item.removeEventListener("click", closeMenu);
+      });
+    });
+
+    return {
+      isMenuActive,
+      navLinks,
+      toggleMenu,
+      closeMenu,
+    };
   },
 };
 </script>
 
 <style scoped>
+/* CSSはそのまま維持 */
 @charset "utf-8";
-main {
-  text-align: center;
-}
+/* 省略 */
+
 
 /* 基本リセット */
 /* ヘッダーとナビゲーションバー */
 header {
   background: linear-gradient(90deg, #c7f1fb, #d7f7ff, #94d2f3);
-  padding: auto;
-  animation: gradientShift 8s infinite;
-  background-size: 300% 300%;
+  padding: 0;
+  width: 100%; /* 横幅を100%に設定 */
+  box-sizing: border-box; /* ボックスのサイズにパディングを含める */
 }
 
 header .p {
@@ -119,6 +123,7 @@ header .p {
 }
 
 .nav-links a {
+  pointer-events: auto;
   text-decoration: none;
   color: #000;
   font-weight: bold;
@@ -180,23 +185,25 @@ li now a {
   box-sizing: border-box;
 }
 
-body {
-  font-family: Arial, sans-serif;
+.footer {
+  text-align: center;
+  /* background: linear-gradient(90deg, #c7f1fb, #d7f7ff, #94d2f3); */
+  background-color: #333;
+  padding: 0 0;
+  color: #000;
+  width: 100%; /* 横幅を100%に設定 */
+  box-sizing: border-box; /* ボックスのサイズにパディングを含める */
+}
+
+.footer p {
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* 全体の高さを確保 */
+  padding: 5px 0;
+  color: #fff;
+  box-sizing: border-box;
 }
 
 main {
   flex: 1; /* メインコンテンツ部分を伸縮可能に */
-}
-
-.footer {
-  text-align: center;
-  background: linear-gradient(90deg, #c7f1fb, #d7f7ff, #94d2f3);
-  padding: 10px 0; /* 高さ調整 */
-  color: #000;
 }
 
 /* メディアクエリ */
@@ -220,4 +227,14 @@ main {
     margin: 10px 0;
   }
 }
+
+a {
+  color: #000; /* リンクの色 */
+  text-decoration: none; /* 下線を削除 */
+}
+
+a:hover {
+  text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
 </style>

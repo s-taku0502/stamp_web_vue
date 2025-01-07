@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <!-- <div>
       <header>
         <nav class="navbar">
           <div class="logo">
             <img id="icon" src="@/assets/images/circle_app_icon.png" alt="アプリアイコン">
             <p>額地区スタンプらり～</p>
           </div>
-          <!-- ナビゲーションリンク -->
+          <!-- ナビゲーションリンク
           <ul class="nav-links" id="nav-links">
             <li><router-link to="/home">ホーム</router-link></li>
             <li><router-link to="/scan">スキャナー</router-link></li>
@@ -16,12 +16,12 @@
             <li><router-link to="/contact">お問い合わせ</router-link></li>
           </ul>
         </nav>
-      </header>
+      </header> -->
       <main>
         <h1>404 Not Found</h1>
         <p>お探しのページが見つかりませんでした。</p>
       </main>
-    </div>
+    <!-- </div> -->
   </template>
   
   <script>

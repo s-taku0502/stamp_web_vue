@@ -1,16 +1,15 @@
 import { createApp } from 'vue';
-import App from '../App.vue';
+import App from './App.vue';
 import router from './router';
-/*
-import '@/assets/css/reset.css';
-import '@/assets/css/home.css';
-import '@/assets/css/template.css';
-import '@/assets/css/scan.css';
+import RegisterLayout from './layouts/RegisterLayout.vue';
 
-import './assets/css/stamps.css';
-import './assets/css/coupons.css';
-import './assets/css/stores.css';
-import './assets/css/contact.css';
-*/
+const app = createApp(App);
 
-createApp(App).use(router).mount('#app');
+// グローバルコンポーネントの登録
+app.component('RegisterLayout', RegisterLayout);
+
+// Vue Router の使用
+app.use(router);
+
+// アプリのマウント
+app.mount('#app');

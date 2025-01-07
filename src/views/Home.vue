@@ -1,9 +1,9 @@
 <!-- filepath: /src/components/Home.vue -->
 <template>
-    <main>
-      こちらは額地区デジタルスタンプらり～のホームページです。
-    </main>
-  </template>
+  <main>
+    こちらは額地区デジタルスタンプ～のホームページです。
+  </main>
+</template>
   
   <script>
   export default {

@@ -1,0 +1,77 @@
+[debug] [2025-01-07T00:14:29.664Z] ----------------------------------------------------------------------
+[debug] [2025-01-07T00:14:29.666Z] Command:       /usr/local/bin/node /usr/local/bin/firebase init
+[debug] [2025-01-07T00:14:29.666Z] CLI Version:   13.29.1
+[debug] [2025-01-07T00:14:29.667Z] Platform:      linux
+[debug] [2025-01-07T00:14:29.667Z] Node Version:  v22.12.0
+[debug] [2025-01-07T00:14:29.667Z] Time:          Tue Jan 07 2025 09:14:29 GMT+0900 (Japan Standard Time)
+[debug] [2025-01-07T00:14:29.667Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-01-07T00:14:29.669Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2025-01-07T00:14:29.755Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-01-07T00:14:29.756Z] > authorizing via signed-in user (nuka2024kit@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/takum1/vuetify/stamp_web_vue
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[debug] [2025-01-07T00:14:30.324Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2025-01-07T00:14:30.325Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2025-01-07T00:17:35.819Z] Using project from CLI flag: kanazawa-nuka2024
+[debug] [2025-01-07T00:17:35.820Z] Checked if tokens are valid: false, expires at: 1736172821344
+[debug] [2025-01-07T00:17:35.820Z] Checked if tokens are valid: false, expires at: 1736172821344
+[debug] [2025-01-07T00:17:35.821Z] > refreshing access token with scopes: []
+[debug] [2025-01-07T00:17:35.822Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-01-07T00:17:35.822Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-07T00:17:36.264Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-01-07T00:17:36.264Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-01-07T00:17:36.290Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/kanazawa-nuka2024 [none]
+[debug] [2025-01-07T00:17:36.917Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/kanazawa-nuka2024 200
+[debug] [2025-01-07T00:17:36.917Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/kanazawa-nuka2024 {"projectId":"kanazawa-nuka2024","projectNumber":"729877460278","displayName":"kanazawa-nuka2024","name":"projects/kanazawa-nuka2024","resources":{"hostingSite":"kanazawa-nuka2024"},"state":"ACTIVE","etag":"1_e1f75f3c-974c-4a4b-bb2d-54217cea260f"}
+[info] i  Using project kanazawa-nuka2024 (kanazawa-nuka2024) 
+[info] 
+=== Firestore Setup
+[debug] [2025-01-07T00:17:36.936Z] Checked if tokens are valid: true, expires at: 1736212655264
+[debug] [2025-01-07T00:17:36.937Z] Checked if tokens are valid: true, expires at: 1736212655264
+[debug] [2025-01-07T00:17:36.937Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/kanazawa-nuka2024/services/firestore.googleapis.com [none]
+[debug] [2025-01-07T00:17:36.937Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/kanazawa-nuka2024/services/firestore.googleapis.com x-goog-quota-user=projects/kanazawa-nuka2024
+[debug] [2025-01-07T00:17:38.397Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/kanazawa-nuka2024/services/firestore.googleapis.com 200
+[debug] [2025-01-07T00:17:38.397Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/kanazawa-nuka2024/services/firestore.googleapis.com [omitted]
+[debug] [2025-01-07T00:17:38.398Z] Checked if tokens are valid: true, expires at: 1736212655264
+[debug] [2025-01-07T00:17:38.398Z] Checked if tokens are valid: true, expires at: 1736212655264
+[debug] [2025-01-07T00:17:38.398Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/kanazawa-nuka2024/databases/(default) [none]
+[debug] [2025-01-07T00:17:38.885Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/kanazawa-nuka2024/databases/(default) 200
+[debug] [2025-01-07T00:17:38.885Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/kanazawa-nuka2024/databases/(default) {"name":"projects/kanazawa-nuka2024/databases/(default)","uid":"e4f80bb9-fda7-4c3d-9d35-ab015a113507","createTime":"2025-01-05T19:00:12.572896Z","updateTime":"2025-01-05T19:00:12.572896Z","locationId":"asia-northeast1","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2025-01-06T23:17:39.586186Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"b","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","etag":"IK68guKq4ooDMIXsj+3D4YoD"}
+[debug] [2025-01-07T00:17:38.885Z] database_type: FIRESTORE_NATIVE
+[debug] [2025-01-07T00:17:38.885Z] database_type: FIRESTORE_NATIVE
+[debug] [2025-01-07T00:17:38.886Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-01-07T00:17:38.886Z] > authorizing via signed-in user (nuka2024kit@gmail.com)
+[debug] [2025-01-07T00:17:38.886Z] [iam] checking project kanazawa-nuka2024 for permissions ["firebase.projects.get"]
+[debug] [2025-01-07T00:17:38.887Z] Checked if tokens are valid: true, expires at: 1736212655264
+[debug] [2025-01-07T00:17:38.887Z] Checked if tokens are valid: true, expires at: 1736212655264
+[debug] [2025-01-07T00:17:38.887Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/kanazawa-nuka2024:testIamPermissions [none]
+[debug] [2025-01-07T00:17:38.887Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/kanazawa-nuka2024:testIamPermissions x-goog-quota-user=projects/kanazawa-nuka2024
+[debug] [2025-01-07T00:17:38.887Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/kanazawa-nuka2024:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2025-01-07T00:17:39.789Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/kanazawa-nuka2024:testIamPermissions 200
+[debug] [2025-01-07T00:17:39.789Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/kanazawa-nuka2024:testIamPermissions {"permissions":["firebase.projects.get"]}
+[info] 
+[info] Firestore Security Rules allow you to define how and when to allow
+[info] requests. You can keep these rules in your project directory
+[info] and publish them with firebase deploy.
+[info] 

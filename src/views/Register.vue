@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="register" id="register">
     <h1>登録画面</h1>
     <form @submit.prevent="register">
       <div>
@@ -11,7 +11,7 @@
         <label for="password">パスワード</label>
         <input type="password" id="password" v-model="password" required />
         <p v-if="password && password.length > 0 && password.length < 6" class="warning">
-          パスワードは6文字以上でなければなりません
+          6文字以上のパスワードを入力してください。
         </p>
       </div>
 
@@ -29,11 +29,23 @@
   </div>
 </template>
 
+<style scoped>
+#register {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+div {
+  margin-bottom: 10px;
+}
+</style>
+
 <script>
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
 export default {
+  name: "Register",
   data() {
     return {
       email: "",

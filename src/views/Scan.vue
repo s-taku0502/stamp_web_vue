@@ -1,17 +1,20 @@
 <template>
-  <div id="Scan>">
-  <main>
-    <h1>QRコードをスキャン</h1>
+  <div id="Scan">
+    <main>
+      <h1>QRコードをスキャン</h1>
 
-    <!-- QRコードスキャナーのコンポーネント -->
-    <qrcode-stream @decode="onDecode" @init="onInit" :paused="!scanning" />
+      <!-- QRコードスキャナーのコンポーネント -->
+      <qrcode-stream
+        v-if="scanning"
+        @detect="onDetect"
+        class="scanner"
+      ></qrcode-stream>
 
-    <!-- スキャン開始 / 停止 ボタン -->
-    <button @click="toggleScanning">{{ scanning ? 'スキャン停止' : 'スキャン開始' }}</button>
-
-    <!-- スキャン結果の表示 -->
-    <p v-if="decodedText">QRコードの内容: {{ decodedText }}</p>
-  </main>
+      <!-- スキャン開始 / 停止 ボタン -->
+      <button @click="toggleScanning">
+        {{ scanning ? 'スキャン停止' : 'スキャン開始' }}
+      </button>
+    </main>
   </div>
 </template>
 
@@ -25,30 +28,17 @@ export default {
   },
   data() {
     return {
-      decodedText: '', // 読み取ったQRコードの内容を保存
       scanning: false, // スキャン中かどうかのフラグ
     };
   },
   methods: {
-    // QRコードが正常に読み取られたときの処理
-    onDecode(decodedText) {
-      // QRコードのデータを decodedText として受け取る
-      this.decodedText = decodedText;
-      // スキャンを停止する
+    // QRコードが検出されたときの処理
+    onDetect(decodedText) {
+      // スキャン結果を親に伝える
+      this.$emit('scan-complete', decodedText);
+      // スキャンを停止
       this.scanning = false;
     },
-    
-    // QRコードリーダーの初期化時に呼ばれるメソッド
-    onInit(promise) {
-      promise
-        .then(() => {
-          console.log('QRコードリーダーの初期化が完了しました。');
-        })
-        .catch((err) => {
-          console.error('QRコードリーダーの初期化エラー:', err);
-        });
-    },
-    
     // スキャンの開始・停止を切り替えるメソッド
     toggleScanning() {
       this.scanning = !this.scanning;
@@ -76,15 +66,48 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* QRコードのスキャン結果を表示するテキストのスタイル */
-p {
-  font-size: 18px;
-  color: #555;
-  margin-top: 20px;
-}
-
 h1 {
   margin-top: 20px;
   color: #333;
+}
+
+/* スキャナーのスタイル */
+.scanner {
+  width: 100%; /* 幅を100%に設定して親要素に合わせる */
+  max-width: 500px; /* 最大幅を500pxに設定 */
+  height: 500px; /* 高さも500pxに設定して正方形にする */
+  margin: 20px auto;
+  border: 2px dashed #cccccc;
+  position: relative;
+}
+
+/* ビデオ要素（カメラ映像）のスタイル */
+.scanner video {
+  width: 100%; /* ビデオ要素の幅を100%に設定 */
+  height: 100%; /* 高さも100%に設定して正方形にフィットさせる */
+  object-fit: cover; /* 縦横比を維持しながら、要素を埋める */
+}
+
+/* スキャナーの枠線を点滅させるアニメーション */
+.scanner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #4CAF50;
+  box-sizing: border-box;
+  animation: blink 1.5s infinite;
+  display: block;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 </style>

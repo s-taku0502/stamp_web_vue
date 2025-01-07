@@ -1,0 +1,124 @@
+<template>
+    <div class="register">
+      <h1>登録画面</h1>
+      <form @submit.prevent="register">
+        <div>
+          <label for="email">メールアドレス</label>
+          <input type="email" id="email" v-model="email" required />
+        </div>
+        <div>
+          <label for="password">パスワード</label>
+          <input type="password" id="password" v-model="password" required />
+          <p v-if="password && password.length > 0 && password.length < 6" class="warning">
+            パスワードは6文字以上でなければなりません
+          </p>
+        </div>
+        <button type="submit" :disabled="isLoading || password.length < 6">
+          <span v-if="isLoading">登録中...</span>
+          <span v-else>登録</span>
+        </button>
+      </form>
+      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+      <p>
+        すでにアカウントをお持ちですか？
+        <router-link to="/login">ログインはこちら</router-link>
+      </p>
+    </div>
+  </template>
+  
+  <script>
+  import { createUserWithEmailAndPassword } from "firebase/auth";
+  import { auth } from "../firebase";
+  
+  export default {
+    name: "Register",
+    data() {
+      return {
+        email: "",
+        password: "",
+        errorMessage: null,
+        isLoading: false,
+      };
+    },
+    methods: {
+      async register() {
+        this.isLoading = true;
+        try {
+          this.errorMessage = null;
+          const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
+          console.log("登録成功:", userCredential.user);
+          alert("登録が成功しました！");
+          this.$router.push("/login");
+          this.email = "";
+          this.password = "";
+        } catch (error) {
+          console.error("登録エラー:", error);
+          if (error.code === "auth/email-already-in-use") {
+            this.errorMessage = "このメールアドレスはすでに登録されています。";
+          } else if (error.code === "auth/invalid-email") {
+            this.errorMessage = "無効なメールアドレスです。";
+          } else if (error.code === "auth/weak-password") {
+            this.errorMessage = "パスワードは6文字以上である必要があります。";
+          } else {
+            this.errorMessage = "予期しないエラーが発生しました。";
+          }
+        } finally {
+          this.isLoading = false;
+        }
+      },
+    },
+  };
+  </script>
+  
+  <style>
+  .register {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .register h1 {
+    text-align: center;
+  }
+  .register form {
+    display: flex;
+    flex-direction: column;
+  }
+  .register form div {
+    margin-bottom: 10px;
+  }
+  .register form label {
+    font-weight: bold;
+  }
+  .register form input {
+    padding: 5px;
+    font-size: 1rem;
+  }
+  .register form button {
+    padding: 10px;
+    font-size: 1rem;
+    background-color: #f0a500;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  .register form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .register p {
+    text-align: center;
+  }
+  .register p a {
+    color: #f0a500;
+  }
+  .register p a:hover {
+    text-decoration: underline;
+  }
+  .register p.error {
+    color: red;
+  }
+  .register p.warning {
+    color: red;
+  }
+  </style>
+  
