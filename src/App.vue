@@ -12,12 +12,13 @@
           <span class="bar"></span>
         </div>
         <ul class="nav-links" ref="navLinks" :class="{ active: isMenuActive }">
-          <li><router-link to="/home" tabindex="0">ホーム</router-link></li>
+          <li><router-link to="/" tabindex="0">ホーム</router-link></li>
           <li><router-link to="/scan">スキャナー</router-link></li>
-          <li><router-link to="/stamps">スタンプ</router-link></li>
+          <li><router-link to="/current-stamps">スタンプ</router-link></li>
           <li><router-link to="/coupons">クーポン</router-link></li>
           <li><router-link to="/stores">店舗情報</router-link></li>
           <li><router-link to="/contact">お問い合わせ</router-link></li>
+          <li><router-link to="/user-profile">マイページ</router-link></li>
         </ul>
       </nav>
     </header>
@@ -144,17 +145,19 @@ header .p {
   width: 25px;
   height: 3px;
   background-color: #000;
-  margin: 4px 0;
+  margin: 4px;
+  margin-right: 10px;
+  margin-left: 3px;
 }
 
 /* ハンバーガーメニューの背景色 */
 .nav-links.active {
   background: linear-gradient(90deg, #c7f1fb, #d7f7ff, #94d2f3);
   position: absolute;
-  top: 60px;
-  right: 0;
-  width: 100%;
-  height: calc(100vh - 60px);
+  top: 8px;
+  width: 80%;
+  /* height: calc(100vh - 60px); */
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
