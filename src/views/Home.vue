@@ -1,7 +1,8 @@
 <!-- filepath: /src/components/Home.vue -->
 <template>
   <main>
-    こちらは額地区デジタルスタンプ～のホームページです。
+    <p>こちらは額地区デジタルスタンプらり～のホームページです。</p>
+    <p>スタンプらり～を利用するには<router-link to="/">こちら</router-link>よりログインしてください。</p>
   </main>
 </template>
   
@@ -12,6 +13,9 @@ export default {
 </script>
 
 <style scoped>
+p{
+  text-align: center;
+}
 
 .container {
   display: flex;
