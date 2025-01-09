@@ -15,7 +15,7 @@ import CurrentStamps from '@/views/CurrentStamps.vue';
 import UserProfile from '@/views/UserProfile.vue';
 
 const routes = [
-  { path: '/', name: 'ログイン画面', component: Login },
+  { path: '/', name: 'マイページ', component: UserProfile },
   { path: '/home', name: 'ホーム', component: Home },
   { path: '/scan', 
     name: 'スキャン画面', 
@@ -26,7 +26,7 @@ const routes = [
   { path: '/coupons', name: 'クーポン画面', component: Coupons },
   { path: '/stores', name: '店舗一覧', component: Stores },
   { path: '/contact', name: 'お問い合わせ', component: Contact },
-  { path: '/user-profile', name: 'マイページ', component: UserProfile },
+,
   {
     path: '/register',
     name: '新規登録',
