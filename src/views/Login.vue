@@ -1,33 +1,61 @@
 <template>
   <div class="login">
-    <h1>ログイン画面</h1>
+    <h1>ログイン</h1>
     <form @submit.prevent="login">
       <div>
         <label for="email">メールアドレス</label>
-        <input type="email" id="email" v-model="email" required />
+        <input type="email" v-model="email" required autocomplete="email" />
       </div>
-
       <div>
         <label for="password">パスワード</label>
-        <input type="password" id="password" v-model="password" required />
+        <input type="password" v-model="password" required />
       </div>
-
-      <button type="submit" :disabled="isLoading">
-        <span v-if="isLoading">ログイン中...</span>
-        <span v-else>ログイン</span>
-      </button>
+      <button type="submit">ログイン</button>
     </form>
 
-    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+    <!-- パスワードを忘れた場合 -->
+    <p class="full-width">
+      パスワードを忘れた場合は、<router-link to="/contact">こちら</router-link>
+      より再設定の申請をしてください。（再設定メールの送信に時間がかかる場合があります。）
+    </p>
 
-    <p>
+    <p class="full-width">
       アカウントをお持ちでない場合は、<router-link to="/register">こちら</router-link>
       より登録してください。
     </p>
   </div>
 </template>
 
-<style>
+<script>
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+export default {
+  name: "Login",
+  data() {
+    return {
+      email: "",
+      password: ""
+    };
+  },
+  methods: {
+    async login() {
+      const auth = getAuth();
+      try {
+        await signInWithEmailAndPassword(auth, this.email, this.password);
+        this.$router.push("/home"); // ログイン成功後にホームページにリダイレクト
+      } catch (error) {
+        alert("ログインに失敗しました: " + error.message);
+      }
+    }
+  }
+};
+</script>
+
+<style scoped>
+* {
+  text-align: center;
+}
+
 .login {
   max-width: 400px;
   margin: 0 auto;
@@ -38,111 +66,36 @@
   text-align: center;
 }
 
-.login form {
-  display: flex;
-  flex-direction: column;
+.full-width {
+  width: 100%;
 }
 
-.login form div {
-  margin-bottom: 10px;
+form div {
+  margin-bottom: 15px;
 }
 
-.login form label {
-  font-weight: bold;
+form label {
+  display: block;
+  margin-bottom: 5px;
 }
 
-.login form input {
-  padding: 5px;
-  font-size: 1rem;
+form input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
 }
 
-.login form button {
+button {
+  width: 100%;
   padding: 10px;
-  font-size: 1rem;
-  background-color: #f0a500;
-  color: #fff;
+  background-color: #4caf50;
+  color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.login form button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-p,
-.login p {
-  max-width: "device-width";
-  margin-top: 10px;
-  text-align: center;
-}
-
-.login p a {
-  color: #f0a500;
-}
-
-.login p a:hover {
-  text-decoration: underline;
-}
-
-.login p.error,
-.login p.warning{
-  color: red;
-  text-align: center;
-}
-
-.login p.success {
-  color: green;
-  text-align: center;
-}
-
-.login p.info {
-  color: blue;
-  text-align: center;
+button:hover {
+  background-color: #45a049;
 }
 </style>
-
-<script>
-  import { signInWithEmailAndPassword } from "firebase/auth";
-  import { auth } from "../firebase";
-
-  export default {
-      async login() {
-      this.isLoading = true;
-      try {
-        this.errorMessage = null;
-        const userCredential = await signInWithEmailAndPassword(auth, this.email, this.password);
-        console.log("ログイン成功:", userCredential.user);
-        alert("ログインが成功しました！");
-
-        // トークンをローカルストレージに保存
-        const token = await userCredential.user.getIdToken();
-        localStorage.setItem('authToken', token);
-
-        this.$router.push('/home');
-        this.email = "";
-        this.password = "";
-      } catch (error) {
-        console.error("ログインエラー:", error);
-        this.handleAuthError(error);
-      } finally {
-        this.isLoading = false;
-      }
-    },
-    handleAuthError(error) {
-      if (error.code === 'auth/user-not-found') {
-        this.errorMessage = "このメールアドレスのユーザーは見つかりません。";
-      } else if (error.code === 'auth/wrong-password') {
-        this.errorMessage = "パスワードが間違っています。";
-      } else if (error.code === 'auth/invalid-email') {
-        this.errorMessage = "無効なメールアドレスです。";
-      } else if(password.length < 6){
-        this.errorMessage = "パスワードは6文字以上で入力してください。";
-      }else if(error.code === 'auth/too-many-requests'){
-        this.errorMessage = "アクセスが制限されています。しばらくしてから再度お試しください。";
-      }else{
-        this.errorMessage = "予期しないエラーが発生しました。";
-      }
-    }
-  }
-</script>

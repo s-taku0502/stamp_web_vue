@@ -5,31 +5,31 @@
   </main>
 </template>
   
-  <script>
-  export default {
-    name: 'Home'
-  };
-  </script>
-  
-  <style scoped>
-.navbar {
-    display: flex
-;
-    justify-content: space-between;
-    align-items: center;
+<script>
+export default {
+  name: 'Home',
+};
+</script>
+
+<style scoped>
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+main {
+  flex: 1;
 }
-user agent stylesheet
-nav {
-    display: block;
-    unicode-bidi: isolate;
+
+footer {
+  background-color: #f1f1f1;
+  text-align: center;
+  padding: 10px 0;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
 }
-body {
-    font-family: Arial, sans-serif;
-}
-  </style>
+
+</style>
