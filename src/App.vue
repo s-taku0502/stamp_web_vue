@@ -12,13 +12,13 @@
           <span class="bar"></span>
         </div>
         <ul class="nav-links" ref="navLinks" :class="{ active: isMenuActive }">
-          <li><router-link to="/" tabindex="0">ホーム</router-link></li>
+          <li><router-link to="/">マイページ</router-link></li>
+          <li><router-link to="/home">ホーム</router-link></li>
           <li><router-link to="/scan">スキャナー</router-link></li>
           <li><router-link to="/current-stamps">スタンプ</router-link></li>
           <li><router-link to="/coupons">クーポン</router-link></li>
           <li><router-link to="/stores">店舗情報</router-link></li>
           <li><router-link to="/contact">お問い合わせ</router-link></li>
-          <li><router-link to="/user-profile">マイページ</router-link></li>
         </ul>
       </nav>
     </header>
