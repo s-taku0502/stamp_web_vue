@@ -3,6 +3,7 @@
   <main>
     <p>こちらは額地区デジタルスタンプらり～のホームページです。</p>
     <p>スタンプらり～を利用するには<router-link to="/">こちら</router-link>よりログインしてください。</p>
+    <p class="attendance">※ログインユーザーはマイページを開きます。</p>
   </main>
 </template>
   
@@ -25,6 +26,11 @@ p{
 
 main {
   flex: 1;
+}
+
+.attendance{
+  text-align: center;
+  color: red;
 }
 
 footer {
