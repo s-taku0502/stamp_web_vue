@@ -12,18 +12,18 @@
       </div>
       <button type="submit">ログイン</button>
     </form>
-
-    <!-- パスワードを忘れた場合 -->
-    <p class="full-width">
-      パスワードを忘れた場合は、<router-link to="/contact">こちら</router-link>
-      より再設定の申請をしてください。（再設定メールの送信に時間がかかる場合があります。）
-    </p>
-
-    <p class="full-width">
-      アカウントをお持ちでない場合は、<router-link to="/register">こちら</router-link>
-      より登録してください。
-    </p>
   </div>
+
+  <!-- パスワードを忘れた場合 -->
+  <p class="full-width">
+    パスワードを忘れた場合は、<router-link to="/contact">こちら</router-link>
+    より再設定の申請をしてください。（再設定メールの送信に時間がかかる場合があります。）
+  </p>
+
+  <p class="full-width">
+    アカウントをお持ちでない場合は、<router-link to="/register">こちら</router-link>
+    より登録してください。
+  </p>
 </template>
 
 <script>
