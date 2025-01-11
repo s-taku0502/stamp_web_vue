@@ -18,17 +18,10 @@ export async function checkAdminAndRedirect(router) {
   }
 
   const db = getFirestore();
-  const appCreatorDoc = await getDoc(doc(db, "organizations/app_creator/members", user.uid));
-  const org01Doc = await getDoc(doc(db, "organizations/org_01/members", user.uid));
-  const org02Doc = await getDoc(doc(db, "organizations/org_02/members", user.uid));
+  const adminEmailDoc = await getDoc(doc(db, "adminEmails", user.email));
 
-  if (
-    (appCreatorDoc.exists() && appCreatorDoc.data().role === "admin") ||
-    (org01Doc.exists() && org01Doc.data().role === "admin") ||
-    (org02Doc.exists() && org02Doc.data().role === "admin")
-  ) {
-    // 管理者として認識
-    return;
+  if (adminEmailDoc.exists() && adminEmailDoc.data().role === "admin") {
+    router.push('/admin'); // 管理者の場合、管理者ページにリダイレクト
   } else {
     router.push('/'); // 管理者でない場合、ホームページにリダイレクト
   }
