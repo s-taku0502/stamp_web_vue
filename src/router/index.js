@@ -36,7 +36,7 @@ const routes = [
     component: Register,
     meta: { layout: RegisterLayout },
   },
-  { path: '/:catchAll(.*)', name: '404NotFound', component: NotFound },
+  { path: '/:catchAll(.*)', name: 'NotFound', component: NotFound } // 404ページのルート
 ];
 
 const router = createRouter({
