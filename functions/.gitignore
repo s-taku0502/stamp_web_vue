@@ -1,2 +1,30 @@
+# Node.js dependencies
 node_modules/
-*.local
+
+# Firebase debug logs
+firebase-debug.log
+firebase-debug.*.log
+
+# Environment variables
+.env
+
+# Firebase configuration
+.firebase/
+
+# Local IDE settings
+.vscode/
+.idea/
+
+# MacOS specific files
+.DS_Store
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Git directory
+.git/
+
+# Build output
+dist/
