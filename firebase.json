@@ -20,7 +20,8 @@
     }
   ],
   "hosting": {
-    "public": "public",
+    "public": "dist", 
+    "/": "ビルドされたファイルが配置されるディレクトリ",
     "ignore": [
       "firebase.json",
       "**/.*",
