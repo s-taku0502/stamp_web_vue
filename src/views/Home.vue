@@ -1,4 +1,3 @@
-<!-- filepath: /src/components/Home.vue -->
 <template>
   <main>
     <p>こちらは額地区デジタルスタンプらり～のホームページです。</p>
@@ -8,13 +7,18 @@
 </template>
   
 <script>
+import { checkAuthAndRedirect } from "@/utils/auth";
+
 export default {
   name: 'Home',
+  created() {
+    checkAuthAndRedirect(this.$router);
+  },
 };
 </script>
 
 <style scoped>
-p{
+p {
   text-align: center;
 }
 
@@ -28,7 +32,7 @@ main {
   flex: 1;
 }
 
-.attendance{
+.attendance {
   text-align: center;
   color: red;
 }
@@ -41,5 +45,4 @@ footer {
   position: absolute;
   bottom: 0;
 }
-
 </style>

@@ -12,13 +12,13 @@
       <input type="text" v-model="newDisplayName" placeholder="新しいユーザー名" />
       <button @click="updateDisplayName">ユーザー名を変更</button>
     </div>
-    <!-- <p>再ログイン・他ページからの遷移でユーザー名の表示が更新されます。</p> -->
     <button @click="logout">ログアウト</button>
   </div>
 </template>
 
 <script>
 import { getAuth, signOut, updateProfile } from "firebase/auth";
+import { checkAuthAndRedirect } from "@/utils/auth";
 
 export default {
   name: "UserProfile",
@@ -29,11 +29,9 @@ export default {
     };
   },
   created() {
+    checkAuthAndRedirect(this.$router);
     const auth = getAuth();
     this.user = auth.currentUser;
-    if (!this.user) {
-      this.$router.push('/login'); // ユーザーが認証されていない場合、ログインページにリダイレクト
-    }
   },
   methods: {
     async updateDisplayName() {
@@ -42,8 +40,7 @@ export default {
       if (user && this.newDisplayName) {
         try {
           await updateProfile(user, { displayName: this.newDisplayName });
-          // ユーザー情報を手動で更新して即時反映
-          this.user = { ...user, displayName: this.newDisplayName };
+          this.user.displayName = this.newDisplayName;
           alert("ユーザー名が更新されました");
         } catch (error) {
           alert("ユーザー名の更新に失敗しました: " + error.message);

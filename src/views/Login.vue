@@ -8,22 +8,25 @@
       </div>
       <div>
         <label for="password">パスワード</label>
-        <input type="password" v-model="password" required />
+        <input type="password" v-model="password" required autocomplete="current-password" />
       </div>
       <button type="submit">ログイン</button>
     </form>
+
+    <!-- エラーメッセージの表示 -->
+    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+    <!-- パスワードを忘れた場合 -->
+    <p class="full-width">
+      パスワードを忘れた場合は、<router-link to="/contact">こちら</router-link>
+      より再設定の申請をしてください。（再設定メールの送信に時間がかかる場合があります。）
+    </p>
+
+    <p class="full-width">
+      アカウントをお持ちでない場合は、<router-link to="/register">こちら</router-link>
+      より登録してください。
+    </p>
   </div>
-
-  <!-- パスワードを忘れた場合 -->
-  <p class="full-width">
-    パスワードを忘れた場合は、<router-link to="/contact">こちら</router-link>
-    より再設定の申請をしてください。（再設定メールの送信に時間がかかる場合があります。）
-  </p>
-
-  <p class="full-width">
-    アカウントをお持ちでない場合は、<router-link to="/register">こちら</router-link>
-    より登録してください。
-  </p>
 </template>
 
 <script>
@@ -34,7 +37,8 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      errorMessage: "" // エラーメッセージを格納するデータプロパティ
     };
   },
   methods: {
@@ -44,7 +48,32 @@ export default {
         await signInWithEmailAndPassword(auth, this.email, this.password);
         this.$router.push("/home"); // ログイン成功後にホームページにリダイレクト
       } catch (error) {
-        alert("ログインに失敗しました: " + error.message);
+        // エラーメッセージを詳細に表示
+        this.handleError(error);
+      }
+    },
+    handleError(error) {
+      counts += 1;
+      switch (error.code) {
+        case 'auth/invalid-email':
+          this.errorMessage = '無効なメールアドレスです。';
+          break;
+        case 'auth/user-disabled':
+          this.errorMessage = 'このユーザーアカウントは無効化されています。';
+          break;
+        case 'auth/user-not-found':
+          this.errorMessage = 'ユーザーが見つかりません。';
+          break;
+        case 'auth/wrong-password':
+          this.errorMessage = 'パスワードが間違っています。';
+          break;
+        case 'auth/invalid-credential':
+          this.errorMessage = '無効な認証情報です。再度ログインしてください。';
+        default:
+          this.errorMessage = 'ログインに失敗しました: ' + error.message;
+      }
+      if (counts === 3){
+        
       }
     }
   }
@@ -97,5 +126,10 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 </style>
