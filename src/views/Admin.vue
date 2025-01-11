@@ -21,7 +21,6 @@
 
 <script>
 import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { checkAdminAndRedirect } from "@/utils/auth";
 
 export default {

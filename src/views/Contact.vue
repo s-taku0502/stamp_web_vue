@@ -63,7 +63,7 @@ export default {
           inquiryType: this.inquiryType,
           message: this.message,
           timestamp: new Date(),
-          visibleTo: ["app_creator", "org_123", "org_456"] // 両団体のIDを指定
+          visibleTo: ["app_creator", "org_01", "org_02"] // 両団体のIDを指定
         });
         alert("お問い合わせ内容が送信されました。");
         this.name = "";

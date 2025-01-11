@@ -38,7 +38,8 @@ export default {
     return {
       email: "",
       password: "",
-      errorMessage: "" // エラーメッセージを格納するデータプロパティ
+      errorMessage: "", // エラーメッセージを格納するデータプロパティ
+      counts: 0 // counts を data プロパティとして定義
     };
   },
   methods: {
@@ -53,7 +54,7 @@ export default {
       }
     },
     handleError(error) {
-      counts += 1;
+      this.counts += 1; // counts をインクリメント
       switch (error.code) {
         case 'auth/invalid-email':
           this.errorMessage = '無効なメールアドレスです。';
@@ -69,11 +70,9 @@ export default {
           break;
         case 'auth/invalid-credential':
           this.errorMessage = '無効な認証情報です。再度ログインしてください。';
+          break;
         default:
           this.errorMessage = 'ログインに失敗しました: ' + error.message;
-      }
-      if (counts === 3){
-        
       }
     }
   }
