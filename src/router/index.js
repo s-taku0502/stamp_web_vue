@@ -13,10 +13,13 @@ import NotFound from '@/views/NotFound.vue';
 import AllStamps from '@/views/AllStamps.vue';
 import CurrentStamps from '@/views/CurrentStamps.vue';
 import UserProfile from '@/views/UserProfile.vue';
+import Admin from '@/views/Admin.vue'; // 管理者画面のインポート
 
 const routes = [
-  { path: '/', name: 'マイページ', component: UserProfile },
-  { path: '/home', name: 'ホーム', component: Home },
+  { path: '/home', name: 'Home', component: Home },
+  { path: '/', name: 'UserProfile', component: UserProfile },
+  { path: '/admin', name: 'Admin', component: Admin }, // 管理者画面のルート
+  { path: '/login', name: 'Login', component: Login },
   { path: '/scan', 
     name: 'スキャン画面', 
     component: Scan,
@@ -31,12 +34,6 @@ const routes = [
     path: '/register',
     name: '新規登録',
     component: Register,
-    meta: { layout: RegisterLayout },
-  },
-  {
-    path: '/login',
-    name: 'ログイン画面',
-    component: Login,
     meta: { layout: RegisterLayout },
   },
   { path: '/:catchAll(.*)', name: '404NotFound', component: NotFound },
