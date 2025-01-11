@@ -3,14 +3,6 @@
     <h1>お問い合わせフォーム</h1>
     <form @submit.prevent="submitForm">
       <div>
-        <label for="name">名前</label>
-        <input type="text" v-model="name" required />
-      </div>
-      <div>
-        <label for="email">メールアドレス</label>
-        <input type="email" v-model="email" required />
-      </div>
-      <div>
         <label for="inquiryType">お問い合わせの種類</label>
         <select v-model="inquiryType" required>
           <option value="" disabled selected>選択</option>
@@ -23,52 +15,71 @@
           <option value="その他">その他</option>
         </select>
       </div>
-      <div v-if="inquiryType === 'パスワード再設定'">
-        <label for="email">メールアドレス<span style="color: red;"> *</span><p>主催団体より連絡させていただく場合がございます。</p></label>
-        <input type="email" id="email" name="email" placeholder="例）nuka@sample.com" required />
+
+      <div>
+        <label for="name">ユーザー名</label>
+        <input type="text" v-model="name" required />
       </div>
-      <div v-else-if="inquiryType === 'その他'">
-        <label for="inquiry-details">お問い合わせ内容をお書きください。<span style="color: red;"> *</span></label>
-        <p style="color: red;"><a href="https://www4.city.kanazawa.lg.jp/soshikikarasagasu/zeimuka/gyomuannai/2/6/4325.html" target="_blank">>>金沢市へのお問い合わせはこちら<<</a></p>
-        <textarea id="inquiry-details" name="inquiry-details" rows="4" required></textarea>
-        <label for="urgent">
-          至急の内容の場合は☑を入れてください。
-          <input type="checkbox" id="urgent" name="urgent" value="至急">
-        </label>
+
+      <div>
+        <label for="email">メールアドレス</label>
+        <input type="email" v-model="email" required />
       </div>
+
+      <div v-if="inquiryType !== 'パスワード再設定'">
+        <label for="message">お問い合わせ内容</label>
+        <textarea v-model="message" rows="4" required></textarea>
+      </div>
+
       <button type="submit">送信</button>
     </form>
   </div>
 </template>
 
 <script>
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getFirestore, doc, getDoc, addDoc, collection } from "firebase/firestore";
 
 export default {
   data() {
     return {
+      inquiryType: "",
       name: "",
       email: "",
-      inquiryType: "",
       message: ""
     };
+  },
+  async created() {
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const db = getFirestore();
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        this.name = userData.name;
+        this.email = userData.email;
+      } else {
+        console.error("ユーザードキュメントが存在しません");
+      }
+    }
   },
   methods: {
     async submitForm() {
       const db = getFirestore();
       try {
         await addDoc(collection(db, "contacts"), {
+          inquiryType: this.inquiryType,
           name: this.name,
           email: this.email,
-          inquiryType: this.inquiryType,
           message: this.message,
           timestamp: new Date(),
           visibleTo: ["app_creator", "org_01", "org_02"] // 両団体のIDを指定
         });
         alert("お問い合わせ内容が送信されました。");
+        this.inquiryType = "";
         this.name = "";
         this.email = "";
-        this.inquiryType = "";
         this.message = "";
       } catch (error) {
         alert("送信中にエラーが発生しました: " + error.message);
