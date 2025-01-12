@@ -80,6 +80,12 @@ export default {
 
 
 /* 基本リセット */
+/* 全てのフォントをリセット */
+html {
+  font-family: "Noto Sans JP", sans-serif;
+  font-size: 16px;
+}
+
 /* ヘッダーとナビゲーションバー */
 header {
   background: linear-gradient(90deg, #c7f1fb, #d7f7ff, #94d2f3);
