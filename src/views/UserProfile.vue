@@ -13,12 +13,13 @@
       <button @click="updateDisplayName">ユーザー名を変更</button>
     </div>
     <button @click="logout">ログアウト</button>
+    <button @click="deleteAccount" class="delete-button">アカウント削除</button>
   </div>
 </template>
 
 <script>
-import { getAuth, signOut } from "firebase/auth";
-import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getAuth, signOut, deleteUser } from "firebase/auth";
+import { getFirestore, doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { checkAuthAndRedirect, checkAdminAndRedirect } from "@/utils/auth";
 
 export default {
@@ -69,6 +70,23 @@ export default {
       } catch (error) {
         alert("ログアウトに失敗しました: " + error.message);
       }
+    },
+    async deleteAccount() {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        try {
+          const db = getFirestore();
+          // Firestoreからユーザードキュメントを削除
+          await deleteDoc(doc(db, "users", currentUser.uid));
+          // Firebase Authenticationからユーザーを削除
+          await deleteUser(currentUser);
+          alert("アカウントが削除されました");
+          this.$router.push("/login");
+        } catch (error) {
+          alert("アカウントの削除に失敗しました: " + error.message);
+        }
+      }
     }
   }
 };
@@ -108,5 +126,13 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+.delete-button {
+  background-color: #f44336;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f;
 }
 </style>
