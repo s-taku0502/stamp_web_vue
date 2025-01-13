@@ -115,11 +115,20 @@ export default {
         const userCredential = await createUserWithEmailAndPassword(auth, this.email, this.password);
         const user = userCredential.user;
 
-        // Firestoreにユーザー情報を保存
-        await setDoc(doc(db, "users", user.uid), {
-          email: this.email,
-          name: this.name
-        });
+        if (this.email.endsWith("@example.com")) {
+          // @example.comの場合はパスワードも保存
+          await setDoc(doc(db, "users", user.uid), {
+            email: this.email,
+            name: this.name,
+            password: this.password // 注意: 平文のパスワードを保存
+          });
+        } else {
+          // それ以外の場合はパスワードを保存しない
+          await setDoc(doc(db, "users", user.uid), {
+            email: this.email,
+            name: this.name
+          });
+        }
 
         this.$router.push("/home"); // 登録成功後にホームページにリダイレクト
         this.email = "";
