@@ -28,13 +28,15 @@
     <div v-else>
       <p>お問い合わせ内容はありません。</p>
     </div>
+
+    <hr />
+
     <div>
       <h2>マイアカウント情報</h2>
-      <div v-if="currentUser">
-        <p><strong>名前:</strong> {{ currentUser.name }}</p>
+      <div class="profile-info" v-if="currentUser">
+        <p><strong>ユーザー名:</strong> {{ currentUser.name }}</p>
         <p><strong>メールアドレス:</strong> {{ currentUser.email }}</p>
         <p v-if="currentUser.password"><strong>パスワード:</strong> {{ currentUser.password }}</p>
-        <button @click="deleteUser(currentUser.uid)">アカウント削除</button>
       </div>
     </div>
 
@@ -57,7 +59,7 @@
 
 <script>
 import { getAuth, signOut, deleteUser as firebaseDeleteUser } from "firebase/auth";
-import { getFirestore, collection, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, updateDoc, doc, deleteDoc, getDoc } from "firebase/firestore";
 import { checkAdminAndRedirect } from "@/utils/auth";
 
 export default {
@@ -67,19 +69,25 @@ export default {
       contacts: [],
       filter: "unresolved",
       filteredContacts: [],
-      users: []
+      currentUser: null
     };
   },
   async created() {
     await checkAdminAndRedirect(this.$router);
     const db = getFirestore();
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+      if (userDoc.exists()) {
+        this.currentUser = { uid: currentUser.uid, ...userDoc.data() };
+      }
+    }
+
     const querySnapshot = await getDocs(collection(db, "contacts"));
     this.contacts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     this.applyFilter();
-
-    // ユーザーリストを取得
-    const usersSnapshot = await getDocs(collection(db, "users"));
-    this.users = usersSnapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
   },
   methods: {
     applyFilter() {
@@ -109,6 +117,36 @@ export default {
       }
       this.applyFilter();
     },
+    async deleteUser(uid) {
+      const auth = getAuth();
+      const db = getFirestore();
+      try {
+        // Firestoreからユーザードキュメントを削除
+        await deleteDoc(doc(db, "users", uid));
+        // Firebase Authenticationからユーザーを削除
+        const user = await auth.getUser(uid);
+        await firebaseDeleteUser(user);
+
+        // ユーザー情報をクリア
+        this.currentUser = null;
+        alert("アカウントが削除されました");
+        this.$router.push("/login");
+      } catch (error) {
+        alert("アカウントの削除に失敗しました: " + error.message);
+      }
+    },
+    async logout() {
+      const auth = getAuth();
+      try {
+        await signOut(auth);
+        this.$router.push("/login");
+      } catch (error) {
+        alert("ログアウトに失敗しました: " + error.message);
+      }
+    }
+  }
+};
+/* // 重要なので残す
     // async deleteUser(uid) {
     //   const auth = getAuth();
     //   const db = getFirestore();
@@ -125,37 +163,7 @@ export default {
     //   } catch (error) {
     //     alert("アカウントの削除に失敗しました: " + error.message);
     //   }
-    // },
-
-    async deleteAccount() {
-      const auth = getAuth();
-      const currentUser = auth.currentUser;
-      if (currentUser) {
-        try {
-          const db = getFirestore();
-          // Firestoreからユーザードキュメントを削除
-          await deleteDoc(doc(db, "users", currentUser.uid));
-          // Firebase Authenticationからユーザーを削除
-          await deleteUser(currentUser);
-          alert("アカウントが削除されました");
-          this.$router.push("/login");
-        } catch (error) {
-          alert("アカウントの削除に失敗しました: " + error.message);
-        }
-      }
-    },
-
-    async logout() {
-      const auth = getAuth();
-      try {
-        await signOut(auth);
-        this.$router.push("/login");
-      } catch (error) {
-        alert("ログアウトに失敗しました: " + error.message);
-      }
-    }
-  }
-};
+    // }, */
 </script>
 
 <style scoped>
