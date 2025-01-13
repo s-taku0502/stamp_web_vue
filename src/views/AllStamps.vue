@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>これまでの期間に取得したスタンプ</h1>
+    <h1>全てのスタンプ</h1>
 
     <!-- スタンプの表示 -->
     <div v-if="stamps.length > 0">
@@ -18,6 +18,7 @@
 <script>
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { auth } from "../firebase";
+import { checkAuthAndRedirect } from "@/utils/auth";
 
 export default {
   name: "AllStamps",
@@ -38,7 +39,8 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
+    await checkAuthAndRedirect(this.$router);
     // コンポーネントが作成されたときにスタンプのデータを取得
     this.fetchStamps();
   }
