@@ -28,6 +28,9 @@
 
       <div v-if="inquiryType !== 'パスワード再設定'">
         <label for="message">お問い合わせ内容</label>
+        <div v-if="inquiryType === 'その他'">
+          <a href="https://www4.city.kanazawa.lg.jp/soshikikarasagasu/zeimuka/gyomuannai/2/6/4325.html"> 金沢市へのお問い合わせはこちら </a>
+        </div>
         <textarea v-model="message" rows="4" required></textarea>
       </div>
 
@@ -100,6 +103,10 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  text-align: center;
+}
+
 form {
   max-inline-size: 600px;
   margin: auto;
