@@ -11,12 +11,17 @@
 </template>
 
 <script>
+import { checkAuthAndRedirect } from "@/utils/auth";
+
 export default {
     name: 'Coupons',
     data() {
         return {
             // Add your data properties here
         };
+    },
+    async created() {
+        await checkAuthAndRedirect(this.$router);
     },
     methods: {
         // Add your methods here

@@ -22,6 +22,8 @@
 import { QrcodeStream } from 'vue-qrcode-reader';
 import { getFirestore, doc, setDoc, collection, addDoc } from "firebase/firestore";
 import { auth } from "../firebase";
+import { checkAuthAndRedirect } from "@/utils/auth";
+// import { getFirestore, doc, setDoc, collection, getDocs } from "firebase/firestore";
 
 export default {
   components: {
@@ -31,6 +33,9 @@ export default {
     return {
       scanning: false,
     };
+  },
+  async created() {
+    await checkAuthAndRedirect(this.$router);
   },
   methods: {
     async onDetect(decodedText) {

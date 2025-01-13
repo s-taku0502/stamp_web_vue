@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { getAuth } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { getFirestore, doc, getDoc, addDoc, collection } from "firebase/firestore";
 
 export default {
@@ -67,34 +67,39 @@ export default {
   methods: {
     async submitForm() {
       const db = getFirestore();
+      const auth = getAuth();
       try {
-        await addDoc(collection(db, "contacts"), {
-          inquiryType: this.inquiryType,
-          name: this.name,
-          email: this.email,
-          message: this.message,
-          timestamp: new Date(),
-          visibleTo: ["app_creator", "org_01", "org_02"] // 両団体のIDを指定
-        });
-        alert("お問い合わせ内容が送信されました。");
-        this.inquiryType = "";
-        this.name = "";
-        this.email = "";
-        this.message = "";
+        if (this.inquiryType === "パスワード再設定") {
+          await sendPasswordResetEmail(auth, this.email);
+          alert("パスワード再設定メールが送信されました。");
+        } else {
+          await addDoc(collection(db, "contacts"), {
+            inquiryType: this.inquiryType,
+            name: this.name,
+            email: this.email,
+            message: this.message,
+            timestamp: new Date(),
+            visibleTo: ["app_creator", "org_01", "org_02"] // 両団体のIDを指定
+          });
+          alert("お問い合わせ内容が送信されました。");
+        }
       } catch (error) {
-        alert("送信中にエラーが発生しました: " + error.message);
+        if (this.inquiryType === "パスワード再設定" && error.code === 'auth/user-not-found') {
+          alert("メールアドレスに不備があります");
+        } else {
+          alert("送信中にエラーが発生しました: " + error.message);
+        }
       }
+      this.inquiryType = "";
+      this.name = "";
+      this.email = "";
+      this.message = "";
     }
   }
 };
 </script>
 
 <style scoped>
-attendance {
-  font-size: 12px;
-  text-align: start;
-}
-
 form {
   max-inline-size: 600px;
   margin: auto;
@@ -105,59 +110,28 @@ form {
 
 label {
   display: block;
-  margin-block-end: 8px;
-  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-label .p {
-  font-weight: lighter;
-}
-
-select, input, textarea {
-  inline-size: 100%;
-  padding: 10px;
-  margin-block-end: 20px;
+input, select, textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 14px;
-}
-
-textarea {
-  resize: none;
-}
-
-input[type="checkbox"] {
-  margin-inline-end: 8px;
-}
-
-.error-message {
-  color: red;
-  font-size: 12px;
-  margin-block-start: -15px;
-  margin-block-end: 20px;
+  box-sizing: border-box;
 }
 
 button {
-  background-color: #6200ea;
-  color: #fff;
-  border: none;
   padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 4px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #4500b0;
-}
-
-.button-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.urgent-button {
-  align-self: flex-end;
+  background-color: #45a049;
 }
 </style>

@@ -24,6 +24,7 @@
 <script>
 import { getFirestore, doc, setDoc, collection, getDocs } from "firebase/firestore";
 import { auth } from "../firebase";
+import { checkAuthAndRedirect } from "@/utils/auth";
 
 export default {
   name: "Stamps",
@@ -33,6 +34,11 @@ export default {
       scannedText: '', // スキャン結果を保存
       stamps: [], // 取得したスタンプのリスト
     };
+  },
+  async created() {
+    await checkAuthAndRedirect(this.$router);
+    // コンポーネントが作成されたときにスタンプのデータを取得
+    this.fetchStamps();
   },
   methods: {
     // スキャン結果を受け取って更新するメソッド
@@ -70,10 +76,6 @@ export default {
         this.updateScannedText(newVal);
       }
     }
-  },
-  created() {
-    // コンポーネントが作成されたときにスタンプのデータを取得
-    this.fetchStamps();
   }
 };
 </script>

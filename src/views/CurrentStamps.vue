@@ -18,14 +18,15 @@
 <script>
 import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 import { auth } from "../firebase";
+import { checkAuthAndRedirect } from "@/utils/auth";
 
 export default {
   name: "CurrentStamps",
   data() {
     return {
       stamps: [], // 取得したスタンプのリスト
-      eventStartDate: new Date('2023-01-01'), // イベント開始日
-      eventEndDate: new Date('2023-12-31'), // イベント終了日
+      eventStartDate: new Date('2025-01-01'), // イベント開始日
+      eventEndDate: new Date('2025-12-31'), // イベント終了日
     };
   },
   methods: {
@@ -41,7 +42,8 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
+    await checkAuthAndRedirect(this.$router);
     // コンポーネントが作成されたときにスタンプのデータを取得
     this.fetchStamps();
   }
