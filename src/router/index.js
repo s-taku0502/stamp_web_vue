@@ -29,7 +29,6 @@ const routes = [
   { path: '/coupons', name: 'クーポン画面', component: Coupons },
   { path: '/stores', name: '店舗一覧', component: Stores },
   { path: '/contact', name: 'お問い合わせ', component: Contact },
-,
   {
     path: '/register',
     name: '新規登録',
