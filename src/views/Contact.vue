@@ -34,7 +34,7 @@
         <textarea v-model="message" rows="4" required></textarea>
       </div>
 
-      <button type="submit">送信</button>
+      <button type="submit"><submit>送信</submit></button>
     </form>
   </div>
 </template>
@@ -110,12 +110,13 @@ h1 {
 form {
   max-inline-size: 600px;
   margin: auto;
-  padding: 20px;
+  padding: 10px;
   background: #fff;
   border-radius: 8px;
 }
 
 label {
+  font-size: 15px;
   display: block;
   margin-bottom: 5px;
 }
@@ -130,11 +131,12 @@ input, select, textarea {
 }
 
 button {
-  padding: 10px 20px;
+  font-size: 15px;
+  padding: 10px 25px;
   background-color: #4caf50;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
