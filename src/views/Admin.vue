@@ -24,10 +24,21 @@
         </li>
       </ul>
     </div>
+    
     <div v-else>
       <p>お問い合わせ内容はありません。</p>
     </div>
     <div>
+      <h2>マイアカウント情報</h2>
+      <div v-if="currentUser">
+        <p><strong>名前:</strong> {{ currentUser.name }}</p>
+        <p><strong>メールアドレス:</strong> {{ currentUser.email }}</p>
+        <p v-if="currentUser.password"><strong>パスワード:</strong> {{ currentUser.password }}</p>
+        <button @click="deleteUser(currentUser.uid)">アカウント削除</button>
+      </div>
+    </div>
+
+    <!-- <div> // 重要なので残す
       <h2>ユーザー管理</h2>
       <ul>
         <li v-for="user in users" :key="user.uid">
@@ -37,8 +48,10 @@
           <button @click="deleteUser(user.uid)">アカウント削除</button>
         </li>
       </ul>
-    </div>
+    </div> -->
+
     <button id="logout" @click="logout">ログアウト</button>
+    <button @click="deleteAccount" class="delete-button">アカウント削除</button>
   </div>
 </template>
 
@@ -96,23 +109,42 @@ export default {
       }
       this.applyFilter();
     },
-    async deleteUser(uid) {
-      const auth = getAuth();
-      const db = getFirestore();
-      try {
-        // Firestoreからユーザードキュメントを削除
-        await deleteDoc(doc(db, "users", uid));
-        // Firebase Authenticationからユーザーを削除
-        const user = await auth.getUser(uid);
-        await firebaseDeleteUser(user);
+    // async deleteUser(uid) {
+    //   const auth = getAuth();
+    //   const db = getFirestore();
+    //   try {
+    //     // Firestoreからユーザードキュメントを削除
+    //     await deleteDoc(doc(db, "users", uid));
+    //     // Firebase Authenticationからユーザーを削除
+    //     const user = await auth.getUser(uid);
+    //     await firebaseDeleteUser(user);
 
-        // ユーザーリストを更新
-        this.users = this.users.filter(user => user.uid !== uid);
-        alert("アカウントが削除されました");
-      } catch (error) {
-        alert("アカウントの削除に失敗しました: " + error.message);
+    //     // ユーザーリストを更新
+    //     this.users = this.users.filter(user => user.uid !== uid);
+    //     alert("アカウントが削除されました");
+    //   } catch (error) {
+    //     alert("アカウントの削除に失敗しました: " + error.message);
+    //   }
+    // },
+
+    async deleteAccount() {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        try {
+          const db = getFirestore();
+          // Firestoreからユーザードキュメントを削除
+          await deleteDoc(doc(db, "users", currentUser.uid));
+          // Firebase Authenticationからユーザーを削除
+          await deleteUser(currentUser);
+          alert("アカウントが削除されました");
+          this.$router.push("/login");
+        } catch (error) {
+          alert("アカウントの削除に失敗しました: " + error.message);
+        }
       }
     },
+
     async logout() {
       const auth = getAuth();
       try {
