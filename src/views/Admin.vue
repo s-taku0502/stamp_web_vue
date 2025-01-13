@@ -20,14 +20,14 @@
           <p><strong>日時:</strong> {{ contact.timestamp.toDate().toLocaleString() }}</p>
           <p><strong>対応状況:</strong> {{ contact.status }}</p>
           <p v-if="contact.resolvedBy"><strong>対応者:</strong> {{ contact.resolvedBy }}</p>
-          <button v-if="contact.status !== 'resolved'" @click="markAsResolved(contact.id)">対応済みにする</button>
+          <button id="stauts" v-if="contact.status !== 'resolved'" @click="markAsResolved(contact.id)">対応済みにする</button>
         </li>
       </ul>
     </div>
     <div v-else>
       <p>お問い合わせ内容はありません。</p>
     </div>
-    <button @click="logout">ログアウト</button>
+    <button id="logout" @click="logout">ログアウト</button>
   </div>
 </template>
 
@@ -112,7 +112,7 @@ li {
   margin-bottom: 10px;
 }
 
-button {
+#logout {
   padding: 10px 20px;
   background-color: #4caf50;
   color: white;
