@@ -20,20 +20,31 @@
           <p><strong>日時:</strong> {{ contact.timestamp.toDate().toLocaleString() }}</p>
           <p><strong>対応状況:</strong> {{ contact.status }}</p>
           <p v-if="contact.resolvedBy"><strong>対応者:</strong> {{ contact.resolvedBy }}</p>
-          <button id="stauts" v-if="contact.status !== 'resolved'" @click="markAsResolved(contact.id)">対応済みにする</button>
+          <button v-if="contact.status !== 'resolved'" @click="markAsResolved(contact.id)">対応済みにする</button>
         </li>
       </ul>
     </div>
     <div v-else>
       <p>お問い合わせ内容はありません。</p>
     </div>
+    <div>
+      <h2>ユーザー管理</h2>
+      <ul>
+        <li v-for="user in users" :key="user.uid">
+          <p><strong>名前:</strong> {{ user.name }}</p>
+          <p><strong>メールアドレス:</strong> {{ user.email }}</p>
+          <p v-if="user.password"><strong>パスワード:</strong> {{ user.password }}</p>
+          <button @click="deleteUser(user.uid)">アカウント削除</button>
+        </li>
+      </ul>
+    </div>
     <button id="logout" @click="logout">ログアウト</button>
   </div>
 </template>
 
 <script>
-import { getAuth, signOut } from "firebase/auth";
-import { getFirestore, collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { getAuth, signOut, deleteUser as firebaseDeleteUser } from "firebase/auth";
+import { getFirestore, collection, getDocs, updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { checkAdminAndRedirect } from "@/utils/auth";
 
 export default {
@@ -42,7 +53,8 @@ export default {
     return {
       contacts: [],
       filter: "unresolved",
-      filteredContacts: []
+      filteredContacts: [],
+      users: []
     };
   },
   async created() {
@@ -51,6 +63,10 @@ export default {
     const querySnapshot = await getDocs(collection(db, "contacts"));
     this.contacts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     this.applyFilter();
+
+    // ユーザーリストを取得
+    const usersSnapshot = await getDocs(collection(db, "users"));
+    this.users = usersSnapshot.docs.map(doc => ({ uid: doc.id, ...doc.data() }));
   },
   methods: {
     applyFilter() {
@@ -79,6 +95,23 @@ export default {
         contact.resolvedBy = currentUser.displayName;
       }
       this.applyFilter();
+    },
+    async deleteUser(uid) {
+      const auth = getAuth();
+      const db = getFirestore();
+      try {
+        // Firestoreからユーザードキュメントを削除
+        await deleteDoc(doc(db, "users", uid));
+        // Firebase Authenticationからユーザーを削除
+        const user = await auth.getUser(uid);
+        await firebaseDeleteUser(user);
+
+        // ユーザーリストを更新
+        this.users = this.users.filter(user => user.uid !== uid);
+        alert("アカウントが削除されました");
+      } catch (error) {
+        alert("アカウントの削除に失敗しました: " + error.message);
+      }
     },
     async logout() {
       const auth = getAuth();
@@ -112,7 +145,7 @@ li {
   margin-bottom: 10px;
 }
 
-#logout {
+button {
   padding: 10px 20px;
   background-color: #4caf50;
   color: white;
@@ -123,5 +156,18 @@ li {
 
 button:hover {
   background-color: #45a049;
+}
+
+#logout {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#logout:hover {
+  background-color: #d32f2f;
 }
 </style>
