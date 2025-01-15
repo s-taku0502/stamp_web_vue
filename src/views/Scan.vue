@@ -20,10 +20,10 @@
 
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader';
-import { getFirestore, doc, setDoc, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { checkAuthAndRedirect } from "@/utils/auth";
-// import { getFirestore, doc, setDoc, collection, getDocs } from "firebase/firestore";
 
 export default {
   components: {
@@ -40,23 +40,32 @@ export default {
   methods: {
     async onDetect(decodedText) {
       // 特定の文字列を検出
-      if (decodedText.includes("特定の文字列")) {
+      if (decodedText.includes("sample")) {
         this.scanning = false;
 
         // Firestoreにスキャン結果を保存
         const db = getFirestore();
+        const storage = getStorage();
         const user = auth.currentUser;
         if (user) {
-          const stampsCollection = collection(db, "stamps", user.uid, "userStamps");
-          await addDoc(stampsCollection, {
+          // 文字列に対応するスタンプIDを使用して画像URLを取得
+          const stampId = "sample"; // ここでは例として "sample" を使用
+          const storageRef = ref(storage, `stamps/${stampId}.png`);
+          const imageUrl = await getDownloadURL(storageRef);
+
+          const stampData = {
             scannedText: decodedText,
             timestamp: new Date(),
-            imageUrl: "https://example.com/stamp.png" // ここにスタンプの画像URLを設定
-          });
-        }
+            imageUrl: imageUrl
+          };
 
-        // スタンプページにリダイレクト
-        this.$router.push({ name: "CurrentStamps" });
+          // Firestoreにスタンプデータを保存
+          const stampsCollection = collection(db, "stamps", user.uid, "userStamps");
+          await addDoc(stampsCollection, stampData);
+
+          // current-stamps と allstamps にリダイレクト
+          this.$router.push({ name: "CurrentStamps" });
+        }
       } else {
         alert("無効なQRコードです");
       }
