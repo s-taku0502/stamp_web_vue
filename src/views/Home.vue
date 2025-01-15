@@ -1,24 +1,29 @@
 <template>
   <main>
-    <p>こちらは額地区デジタルスタンプらり～のホームページです。</p>
-    <p>スタンプらり～を利用するには<router-link to="/">こちら</router-link>よりログインしてください。</p>
-    <p class="attendance">※ログインユーザーはマイページを開きます。</p>
+    <h2>こちらは額地区デジタルスタンプらり～のホームページです。</h2>
+    <News />
+    <!-- <p>スタンプらり～を利用するには<router-link to="/">こちら</router-link>よりログインしてください。</p> -->
+    <!-- <p class="attendance">※ログインユーザーはマイページを開きます。</p> -->
   </main>
 </template>
   
 <script>
 import { checkAuthAndRedirect } from "@/utils/auth";
+import News from "@/views/News.vue";
 
 export default {
   name: 'Home',
   created() {
     checkAuthAndRedirect(this.$router);
   },
+  components: {
+    News
+  }
 };
 </script>
 
 <style scoped>
-p {
+* {
   text-align: center;
 }
 
