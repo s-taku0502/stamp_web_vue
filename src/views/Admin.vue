@@ -23,6 +23,7 @@
           <button v-if="contact.status !== 'resolved'" @click="markAsResolved(contact.id)">対応済みにする</button>
         </li>
       </ul>
+      <button id="logout" @click="logout">ログアウト</button>
     </div>
     <div v-else>
       <p>お問い合わせ内容はありません。</p>
@@ -34,11 +35,10 @@
         <p><strong>ユーザー名:</strong> {{ currentUser.name }}</p>
         <p><strong>メールアドレス:</strong> {{ currentUser.email }}</p>
         <p v-if="currentUser.password"><strong>パスワード:</strong> {{ currentUser.password }}</p>
+        <button id="logout" @click="logout">ログアウト</button>
         <button @click="deleteUser(currentUser.uid)">アカウント削除</button>
       </div>
     </div>
-    <hr />
-    <button id="logout" @click="logout">ログアウト</button>
   </div>
 </template>
 

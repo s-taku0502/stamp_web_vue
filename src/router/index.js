@@ -14,6 +14,7 @@ import AllStamps from '@/views/AllStamps.vue';
 import CurrentStamps from '@/views/CurrentStamps.vue';
 import UserProfile from '@/views/UserProfile.vue';
 import Admin from '@/views/Admin.vue'; // 管理者画面のインポート
+
 const routes = [
   { path: '/home', name: 'Home', component: Home },
   { path: '/', name: 'UserProfile', component: UserProfile },
@@ -28,7 +29,6 @@ const routes = [
   { path: '/coupons', name: 'クーポン画面', component: Coupons },
   { path: '/stores', name: '店舗一覧', component: Stores },
   { path: '/contact', name: 'お問い合わせ', component: Contact },
-  { path: '/special', name: '特別ページ', component: Mypage},
   {
     path: '/register',
     name: '新規登録',
