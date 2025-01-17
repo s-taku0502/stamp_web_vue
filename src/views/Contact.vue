@@ -15,14 +15,15 @@
           <option value="その他">その他</option>
         </select>
       </div>
-
-      <div>
-        <label for="name">ユーザー名</label>
-        <input type="text" v-model="name" required />
+      <div v-if="inquiryType !== 'パスワード再設定'">
+        <div>
+          <label for="name">ユーザー名</label>
+          <input type="text" v-model="name" required />
+        </div>
       </div>
 
       <div>
-        <label for="email">メールアドレス</label>
+        <label for="email">メールアドレス</label><a style="color: red;">登録したメールアドレスを入力してください。</a>
         <input type="email" v-model="email" required />
       </div>
 
