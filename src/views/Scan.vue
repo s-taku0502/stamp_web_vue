@@ -20,7 +20,7 @@
 
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader';
-import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { checkAuthAndRedirect } from "@/utils/auth";
@@ -40,30 +40,60 @@ export default {
   methods: {
     async onDetect(decodedText) {
       this.scanning = false;
+      console.log("decodedText:", decodedText); // デバッグ情報を出力
+
       const db = getFirestore();
       const user = auth.currentUser;
-      if (user) {
-        const usersCollection = collection(db, "users");
-        const q = query(usersCollection, where("email", "==", user.email));
-        const querySnapshot = await getDocs(q);
 
-        if (!querySnapshot.empty) {
-          let storageRef;
-          if (decodedText === "sample") {
-            storageRef = ref(getStorage(), `stamps/sample.webp`);
-          } else {
-            storageRef = ref(getStorage(), `stamps/${decodedText}.png`);
+      // decodedTextが配列の場合、最初の要素を取り出す
+      if (Array.isArray(decodedText)) {
+        decodedText = decodedText[0];
+      }
+
+      // decodedTextの詳細な内容を出力
+      if (typeof decodedText === 'object') {
+        for (const key in decodedText) {
+          if (decodedText.hasOwnProperty(key)) {
+            console.log(`${key}: ${decodedText[key]}`);
           }
-          try {
-            const imageUrl = await getDownloadURL(storageRef);
-            this.$emit('image-scanned', imageUrl);
-            this.$router.push({ name: "CurrentStamps", params: { imageUrl } });
-          } catch (error) {
-            console.error("画像のダウンロードに失敗しました: ", error);
-            alert("無効なQRコードです");
+        }
+      }
+
+      // decodedTextの適切なプロパティを確認
+      let text = typeof decodedText === 'string' ? decodedText : decodedText.rawValue;
+      console.log("text:", text); // デバッグ情報を出力
+
+      if (user) {
+        // textが文字列であることを確認
+        if (typeof text === 'string') {
+          const stampDocRef = doc(db, "stamps", text);
+          const stampDoc = await getDoc(stampDocRef);
+
+          if (stampDoc.exists()) {
+            const stampData = stampDoc.data();
+            console.log("stampData:", stampData); // デバッグ情報を出力
+
+            // gs:// URLを処理するために、Firebase Storageの参照を作成
+            const storage = getStorage();
+            const storageRef = ref(storage, stampData.imageUrl.replace('gs://kanazawa-nuka2024.firebasestorage.app/', ''));
+            console.log("storageRef:", storageRef); // デバッグ情報を出力
+
+            try {
+              const imageUrl = await getDownloadURL(storageRef);
+              console.log("imageUrl:", imageUrl); // デバッグ情報を出力
+              this.$emit('image-scanned', imageUrl);
+              const decodedImageUrl = decodeURIComponent(imageUrl);
+              this.$router.push({ name: "CurrentStamps", params: { imageUrl: decodedImageUrl } });
+            } catch (error) {
+              console.error("画像のダウンロードに失敗しました: ", error);
+              alert(`${text}: 画像のダウンロードに失敗しました`);
+            }
+          } else {
+            alert(`${text}: 無効なQRコードです`);
           }
         } else {
-          alert("ユーザーが認証されていません");
+          console.error("QRコードの内容が無効です: ", text);
+          alert(`${text}: 無効なQRコードです`);
         }
       } else {
         alert("ユーザーが認証されていません");
