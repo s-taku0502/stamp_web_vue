@@ -26,11 +26,11 @@
     <main>
       <router-view></router-view>
     </main>
-    <!-- <footer>
+    <footer>
       <div class="footer">
         <p>© 2024-2025 額地区スタンプらり～</p>
       </div>
-    </footer> -->
+    </footer>
   </div>
 </template>
 
@@ -78,7 +78,6 @@ export default {
 /* CSSはそのまま維持 */
 @charset "utf-8";
 /* 省略 */
-
 
 /* 基本リセット */
 /* 全てのフォントをリセット */
@@ -185,14 +184,20 @@ li now {
 }
 
 li now a {
-  color: #f0a500; /* リンクのテキストの色をオレンジに */
-  text-decoration: none; /* リンクの下線を削除 */
+  color: #f0a500; /* linkのテキストの色をオレンジに */
+  text-decoration: none; /* linkの下線を削除 */
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .footer {
@@ -239,7 +244,7 @@ main {
 }
 
 a {
-  color: #000; /* リンクの色 */
+  color: #000; /* linkの色 */
   text-decoration: none; /* 下線を削除 */
 }
 
