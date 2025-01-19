@@ -10,6 +10,7 @@ import Stores from '@/views/Stores.vue';
 import Contact from '@/views/Contact.vue';
 import Register from '@/views/Register.vue';
 import NotFound from '@/views/NotFound.vue';
+import Stamps from '@/views/Stamps.vue';
 import AllStamps from '@/views/AllStamps.vue';
 import CurrentStamps from '@/views/CurrentStamps.vue';
 import UserProfile from '@/views/UserProfile.vue';
@@ -24,6 +25,7 @@ const routes = [
     name: 'スキャン画面', 
     component: Scan,
     props: (route) => ({ onScanComplete: route.query.onScanComplete }) },
+  { path: '/stamps', name:'スタンプ画面', component: Stamps },
   { path: '/current-stamps', name: '開催中のスタンプ', component: CurrentStamps },
   { path: '/all-stamps', name: '過去のスタンプ', component: AllStamps },
   { path: '/coupons', name: 'クーポン画面', component: Coupons },
