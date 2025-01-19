@@ -39,33 +39,25 @@ export default {
   },
   methods: {
     async onDetect(decodedText) {
-      // 特定の文字列を検出
-      if (decodedText.includes("sample")) {
-        this.scanning = false;
+      this.scanning = false;
+      const db = getFirestore();
+      const storage = getStorage();
+      const user = auth.currentUser;
+      if (user) {
+        const stampId = "sample"; // 例として "sample" を使用
+        const storageRef = ref(storage, `stamps/${stampId}.png`);
+        const imageUrl = await getDownloadURL(storageRef);
 
-        // Firestoreにスキャン結果を保存
-        const db = getFirestore();
-        const storage = getStorage();
-        const user = auth.currentUser;
-        if (user) {
-          // 文字列に対応するスタンプIDを使用して画像URLを取得
-          const stampId = "sample"; // ここでは例として "sample" を使用
-          const storageRef = ref(storage, `stamps/${stampId}.png`);
-          const imageUrl = await getDownloadURL(storageRef);
+        const stampData = {
+          scannedText: decodedText,
+          timestamp: new Date(),
+          imageUrl: imageUrl
+        };
 
-          const stampData = {
-            scannedText: decodedText,
-            timestamp: new Date(),
-            imageUrl: imageUrl
-          };
+        const stampsCollection = collection(db, "stamps", user.uid, "userStamps");
+        await addDoc(stampsCollection, stampData);
 
-          // Firestoreにスタンプデータを保存
-          const stampsCollection = collection(db, "stamps", user.uid, "userStamps");
-          await addDoc(stampsCollection, stampData);
-
-          // current-stamps と allstamps にリダイレクト
-          this.$router.push({ name: "CurrentStamps" });
-        }
+        this.$router.push({ name: "CurrentStamps" });
       } else {
         alert("無効なQRコードです");
       }
