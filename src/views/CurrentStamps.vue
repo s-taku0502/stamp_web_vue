@@ -1,6 +1,10 @@
 <template>
   <div>
     <h1>イベント期間中のスタンプ</h1>
+    <div v-if="imageUrl">
+      <h2>取得したスタンプ</h2>
+      <img :src="imageUrl" alt="Scanned Stamp" />
+    </div>
     <div v-if="stamps.length > 0">
       <h2>取得したスタンプ</h2>
       <div class="stamps-container">
@@ -20,11 +24,18 @@ import { checkAuthAndRedirect } from "@/utils/auth";
 
 export default {
   name: "CurrentStamps",
+  props: {
+    imageUrl: {
+      type: String,
+      required: false
+    }
+  },
   data() {
     return {
       stamps: [],
       eventStartDate: new Date('2025-01-01'),
       eventEndDate: new Date('2025-12-31'),
+      imageUrl: this.$route.params.imageUrl || null
     };
   },
   methods: {
@@ -58,5 +69,10 @@ export default {
 .stamp img {
   width: 100px;
   height: 100px;
+}
+img {
+  margin-top: 20px;
+  max-width: 100%;
+  height: auto;
 }
 </style>

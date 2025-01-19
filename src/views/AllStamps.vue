@@ -1,8 +1,6 @@
 <template>
   <div>
     <h1>全てのスタンプ</h1>
-
-    <!-- スタンプの表示 -->
     <div v-if="stamps.length > 0">
       <h2>取得したスタンプ</h2>
       <div class="stamps-container">
@@ -24,11 +22,10 @@ export default {
   name: "AllStamps",
   data() {
     return {
-      stamps: [], // 取得したスタンプのリスト
+      stamps: [],
     };
   },
   methods: {
-    // スタンプのデータを取得するメソッド
     async fetchStamps() {
       const db = getFirestore();
       const user = auth.currentUser;
@@ -41,7 +38,6 @@ export default {
   },
   async created() {
     await checkAuthAndRedirect(this.$router);
-    // コンポーネントが作成されたときにスタンプのデータを取得
     this.fetchStamps();
   }
 };
@@ -52,12 +48,10 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-
 .stamp {
   margin: 10px;
   text-align: center;
 }
-
 .stamp img {
   width: 100px;
   height: 100px;
