@@ -1,22 +1,12 @@
 <template>
   <div id="Stamps">
     <div class="tabs">
-      <button
-        v-for="tab in tabs"
-        :key="tab"
-        :class="{ active: currentTab === tab }"
-        @click="currentTab = tab"
-      >
-        {{ tab }}
-      </button>
+      <button @click="currentTab = 'current'">Current Stamps</button>
+      <button @click="currentTab = 'all'">All Stamps</button>
     </div>
     <div class="tab-content">
-      <div v-if="currentTab === '期間中のスタンプ'">
-        <CurrentStamps />
-      </div>
-      <div v-if="currentTab === 'これまでの含めてすべての期間のスタンプ'">
-        <AllStamps />
-      </div>
+      <CurrentStamps v-if="currentTab === 'current'" :imageUrl="imageUrl" />
+      <AllStamps v-if="currentTab === 'all'" />
     </div>
   </div>
 </template>
@@ -32,9 +22,14 @@ export default {
   },
   data() {
     return {
-      tabs: ['期間中のスタンプ', 'これまでの含めてすべての期間のスタンプ'],
-      currentTab: '期間中のスタンプ'
+      currentTab: 'current',
+      imageUrl: '' // 初期値を設定
     };
+  },
+  methods: {
+    setImageUrl(url) {
+      this.imageUrl = url;
+    }
   }
 };
 </script>
@@ -53,10 +48,6 @@ export default {
 .tabs button {
   padding: 10px 20px;
   margin: 0 5px;
-  background-color: #e0e0e0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
 .tabs button.active {
@@ -65,6 +56,7 @@ export default {
 }
 
 .tab-content {
-  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 </style>
