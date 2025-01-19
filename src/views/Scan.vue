@@ -20,7 +20,6 @@
 
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader';
-import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { checkAuthAndRedirect } from "@/utils/auth";
@@ -40,26 +39,20 @@ export default {
   methods: {
     async onDetect(decodedText) {
       this.scanning = false;
-      const db = getFirestore();
       const storage = getStorage();
       const user = auth.currentUser;
       if (user) {
-        const stampId = "sample"; // 例として "sample" を使用
-        const storageRef = ref(storage, `stamps/${stampId}.png`);
-        const imageUrl = await getDownloadURL(storageRef);
-
-        const stampData = {
-          scannedText: decodedText,
-          timestamp: new Date(),
-          imageUrl: imageUrl
-        };
-
-        const stampsCollection = collection(db, "stamps", user.uid, "userStamps");
-        await addDoc(stampsCollection, stampData);
-
-        this.$router.push({ name: "CurrentStamps" });
+        const storageRef = ref(storage, `stamps/${decodedText}.png`);
+        try {
+          const imageUrl = await getDownloadURL(storageRef);
+          this.$emit('image-scanned', imageUrl);
+          this.$router.push({ name: "CurrentStamps", params: { imageUrl } });
+        } catch (error) {
+          console.error("画像のダウンロードに失敗しました: ", error);
+          alert("無効なQRコードです");
+        }
       } else {
-        alert("無効なQRコードです");
+        alert("ユーザーが認証されていません");
       }
     },
     toggleScanning() {
@@ -148,5 +141,11 @@ h1 {
   50% {
     opacity: 0.5;
   }
+}
+
+img {
+  margin-top: 20px;
+  max-width: 100%;
+  height: auto;
 }
 </style>
