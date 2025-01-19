@@ -20,6 +20,7 @@
 
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader';
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { checkAuthAndRedirect } from "@/utils/auth";
@@ -39,17 +40,30 @@ export default {
   methods: {
     async onDetect(decodedText) {
       this.scanning = false;
-      const storage = getStorage();
+      const db = getFirestore();
       const user = auth.currentUser;
       if (user) {
-        const storageRef = ref(storage, `stamps/${decodedText}.png`);
-        try {
-          const imageUrl = await getDownloadURL(storageRef);
-          this.$emit('image-scanned', imageUrl);
-          this.$router.push({ name: "CurrentStamps", params: { imageUrl } });
-        } catch (error) {
-          console.error("画像のダウンロードに失敗しました: ", error);
-          alert("無効なQRコードです");
+        const usersCollection = collection(db, "users");
+        const q = query(usersCollection, where("email", "==", user.email));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          let storageRef;
+          if (decodedText === "sample") {
+            storageRef = ref(getStorage(), `stamps/sample.webp`);
+          } else {
+            storageRef = ref(getStorage(), `stamps/${decodedText}.png`);
+          }
+          try {
+            const imageUrl = await getDownloadURL(storageRef);
+            this.$emit('image-scanned', imageUrl);
+            this.$router.push({ name: "CurrentStamps", params: { imageUrl } });
+          } catch (error) {
+            console.error("画像のダウンロードに失敗しました: ", error);
+            alert("無効なQRコードです");
+          }
+        } else {
+          alert("ユーザーが認証されていません");
         }
       } else {
         alert("ユーザーが認証されていません");
