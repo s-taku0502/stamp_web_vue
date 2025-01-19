@@ -1,9 +1,10 @@
 <template>
   <div>
     <h1>イベント期間中のスタンプ</h1>
-    <div v-if="imageUrl">
-      <h2>取得したスタンプ</h2>
-      <img :src="imageUrl" alt="Scanned Stamp" />
+    <div class="stamps-container">
+      <div class="stamp" v-if="imageUrl">
+        <img :src="imageUrl" alt="Stamp Image">
+      </div>
     </div>
     <div v-if="stamps.length > 0">
       <h2>取得したスタンプ</h2>
@@ -27,7 +28,7 @@ export default {
   props: {
     imageUrl: {
       type: String,
-      required: false
+      required: true
     }
   },
   data() {
