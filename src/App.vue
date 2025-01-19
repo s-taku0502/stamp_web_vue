@@ -26,11 +26,11 @@
     <main>
       <router-view></router-view>
     </main>
-    <footer>
+    <!-- <footer>
       <div class="footer">
         <p>© 2024-2025 額地区スタンプらり～</p>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
