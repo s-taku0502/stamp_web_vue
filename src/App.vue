@@ -15,7 +15,8 @@
           <li><router-link to="/">マイページ</router-link></li>
           <li><router-link to="/home">ホーム</router-link></li>
           <li><router-link to="/scan">スキャナー</router-link></li>
-          <li><router-link to="/current-stamps">スタンプ</router-link></li>
+          <li><router-link to="/stamps">スタンプ</router-link></li>
+          <!-- <li><router-link to="/current-stamps">スタンプ</router-link></li> -->
           <li><router-link to="/coupons">クーポン</router-link></li>
           <li><router-link to="/stores">店舗情報</router-link></li>
           <li><router-link to="/contact">お問い合わせ</router-link></li>
