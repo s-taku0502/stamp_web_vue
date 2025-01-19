@@ -52,7 +52,7 @@
       </div>
       <div v-if="currentTab === 'お知らせ入力欄'">
         <h2>お知らせ入力欄</h2>
-        <form @submit.prevent="addNews">
+        <form @submit.prevent="saveNews">
           <div>
             <label for="content">内容</label>
             <textarea id="content" v-model="newNews.content" required rows="5" cols="40"></textarea>
@@ -65,12 +65,12 @@
             <label for="organization">投稿団体</label>
             <input type="text" id="organization" v-model="newNews.organization" required />
           </div>
-          <button type="submit">追加</button>
+          <button type="submit">{{ isEditing ? '更新' : '追加' }}</button>
         </form>
         <ul>
           <li v-for="news in validNewsList" :key="news.id">
             <p><strong>内容:</strong> {{ news.content }}</p>
-            <p><strong>終了日:</strong> {{ news.endDate.toDate().toLocaleDateString() }}</p>
+            <p><strong>終了日:</strong> {{ formatDate(news.endDate) }}</p>
             <p><strong>投稿団体:</strong> {{ news.organization }}</p>
             <button @click="editNews(news)">編集</button>
             <button @click="deleteNews(news.id)">削除</button>
@@ -109,7 +109,9 @@ export default {
         endDate: "",
         organization: ""
       },
-      newsList: []
+      newsList: [],
+      isEditing: false,
+      editingNewsId: null
     };
   },
   async created() {
@@ -136,108 +138,107 @@ export default {
     this.applyFilter();
 
     const newsSnapshot = await getDocs(collection(db, "news"));
-    this.newsList = newsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    this.newsList = newsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        endDate: data.endDate.toDate ? data.endDate.toDate() : new Date(data.endDate)
+      };
+    });
   },
   computed: {
     validNewsList() {
       const now = new Date();
-      return this.newsList.filter(news => news.endDate.toDate() >= now);
+      return this.newsList.filter(news => {
+        const endDate = news.endDate instanceof Date ? news.endDate : new Date(news.endDate);
+        endDate.setHours(23, 59, 59, 999); // 終了日をその日の23:59:59に設定
+        return endDate >= now;
+      });
     }
   },
   methods: {
+    logout() {
+      const auth = getAuth();
+      signOut(auth)
+        .then(() => {
+          this.$router.push("/login");
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+    },
     applyFilter() {
       if (this.filter === "all") {
         this.filteredContacts = this.contacts;
-      } else if (this.filter === "unresolved") {
-        this.filteredContacts = this.contacts.filter(contact => contact.status !== "resolved");
-      } else if (this.filter === "resolved") {
-        this.filteredContacts = this.contacts.filter(contact => contact.status === "resolved");
+      } else {
+        this.filteredContacts = this.contacts.filter(contact => contact.status === this.filter);
       }
     },
-    async markAsResolved(contactId) {
-      const auth = getAuth();
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        alert("ユーザーが認証されていません");
-        return;
-      }
-
+    markAsResolved(contactId) {
       const db = getFirestore();
       const contactRef = doc(db, "contacts", contactId);
-      await updateDoc(contactRef, { status: "resolved", resolvedBy: currentUser.displayName });
-      const contact = this.contacts.find(contact => contact.id === contactId);
-      if (contact) {
-        contact.status = "resolved";
-        contact.resolvedBy = currentUser.displayName;
-      }
-      this.applyFilter();
-    },
-    async addNews() {
-      const db = getFirestore();
-      const endDate = new Date(this.newNews.endDate);
-      endDate.setDate(endDate.getDate() + 1); // 終了日を1日進める
-
-      await addDoc(collection(db, "news"), {
-        content: this.newNews.content,
-        endDate: endDate,
-        organization: this.newNews.organization
+      updateDoc(contactRef, { status: "resolved" }).then(() => {
+        this.applyFilter();
       });
+    },
+    saveNews() {
+      const db = getFirestore();
+      if (this.isEditing) {
+        const newsRef = doc(db, "news", this.editingNewsId);
+        updateDoc(newsRef, {
+          content: this.newNews.content,
+          endDate: this.newNews.endDate,
+          organization: this.newNews.organization
+        }).then(() => {
+          this.resetForm();
+        });
+      } else {
+        addDoc(collection(db, "news"), {
+          content: this.newNews.content,
+          endDate: this.newNews.endDate,
+          organization: this.newNews.organization
+        }).then(() => {
+          this.resetForm();
+        });
+      }
+    },
+    editNews(news) {
+      this.newNews = { ...news };
+      this.isEditing = true;
+      this.editingNewsId = news.id;
+    },
+    deleteNews(newsId) {
+      const db = getFirestore();
+      const newsRef = doc(db, "news", newsId);
+      deleteDoc(newsRef).then(() => {
+        this.newsList = this.newsList.filter(news => news.id !== newsId);
+      });
+    },
+    deleteUser(uid) {
+      const auth = getAuth();
+      const db = getFirestore();
+      firebaseDeleteUser(auth.currentUser)
+        .then(() => {
+          const userRef = doc(db, "users", uid);
+          deleteDoc(userRef);
+          this.$router.push("/login");
+        })
+        .catch((error) => {
+          console.error(error.message);
+        });
+    },
+    resetForm() {
       this.newNews = {
         content: "",
         endDate: "",
         organization: ""
       };
-      const newsSnapshot = await getDocs(collection(db, "news"));
-      this.newsList = newsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      this.isEditing = false;
+      this.editingNewsId = null;
     },
-    async editNews(news) {
-      const db = getFirestore();
-      const newsRef = doc(db, "news", news.id);
-      const newContent = prompt("内容を入力してください", news.content);
-      const newEndDate = new Date(prompt("終了日を入力してください", news.endDate.toDate().toISOString().split('T')[0]));
-      const newOrganization = prompt("投稿団体を入力してください", news.organization);
-
-      if (newContent && newEndDate && newOrganization) {
-        await updateDoc(newsRef, {
-          content: newContent,
-          endDate: newEndDate,
-          organization: newOrganization
-        });
-        const newsSnapshot = await getDocs(collection(db, "news"));
-        this.newsList = newsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      }
-    },
-    async deleteNews(newsId) {
-      const db = getFirestore();
-      await deleteDoc(doc(db, "news", newsId));
-      this.newsList = this.newsList.filter(news => news.id !== newsId);
-    },
-    async deleteUser(uid) {
-      const auth = getAuth();
-      const db = getFirestore();
-      try {
-        // Firestoreからユーザードキュメントを削除
-        await deleteDoc(doc(db, "users", uid));
-        // Firebase Authenticationからユーザーを削除
-        const user = await auth.getUser(uid);
-        await firebaseDeleteUser(user);
-
-        // ユーザー情報をクリア
-        this.currentUser = null;
-        alert("アカウントが削除されました");
-        this.$router.push("/login");
-      } catch (error) {
-        alert("アカウントの削除に失敗しました: " + error.message);
-      }
-    },
-    async logout() {
-      const auth = getAuth();
-      try {
-        await signOut(auth);
-        this.$router.push("/login");
-      } catch (error) {
-        alert("ログアウトに失敗しました: " + error.message);
-      }
+    formatDate(date) {
+      return date instanceof Date ? date.toLocaleDateString() : new Date(date).toLocaleDateString();
     }
   }
 };
@@ -313,9 +314,12 @@ button:hover {
 
 .logout-button {
   padding: 10px 20px;
-  background-color: #f44336;
-  color: white;
-  border: none;
+  background-color: #cfcfcf;
+  color: #000;
+  /* border: #000; */
+  /* border-color: black; */
+  font: bold;
+  font-size: 15px;
   border-radius: 5px;
   cursor: pointer;
 }

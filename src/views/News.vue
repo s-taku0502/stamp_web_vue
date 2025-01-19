@@ -2,12 +2,12 @@
   <main class="info-box">
     <h3 class="title">お知らせ</h3>
     <br>
-    <div v-if="newsList.length > 0">
+    <div v-if="validNewsList.length > 0">
       <div class="news-box">
-        <div v-for="news in newsList" :key="news.id" class="news-item">
+        <div v-for="news in validNewsList" :key="news.id" class="news-item">
           <p class="content">{{ news.content }}</p>
           <p class="organization">投稿団体: {{ news.organization }}</p>
-          <p class="period">終了日: {{ news.endDate.toDate().toLocaleDateString() }}</p>
+          <p class="period">終了日: {{ formatDate(news.endDate) }}</p>
         </div>
       </div>
     </div>
@@ -28,7 +28,30 @@ export default {
   async created() {
     const db = getFirestore();
     const querySnapshot = await getDocs(collection(db, "news"));
-    this.newsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    this.newsList = querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        endDate: data.endDate.toDate ? data.endDate.toDate() : new Date(data.endDate)
+      };
+    });
+  },
+  computed: {
+    validNewsList() {
+      const now = new Date();
+      // 終了日がその日の24時を過ぎていないニュースのみ表示
+      return this.newsList.filter(news => {
+        const endDate = news.endDate instanceof Date ? news.endDate : new Date(news.endDate);
+        endDate.setHours(23, 59, 59, 999); // 終了日をその日の23:59:59に設定
+        return endDate >= now;
+      });
+    }
+  },
+  methods: {
+    formatDate(date) {
+      return date instanceof Date ? date.toLocaleDateString() : new Date(date).toLocaleDateString();
+    }
   }
 };
 </script>
