@@ -15,7 +15,6 @@ export default {
     return {
       imageUrl: null,
       description: null,
-      error: null,
     };
   },
   async created() {
@@ -32,7 +31,7 @@ export default {
       return;
     }
 
-    const userStampRef = doc(db, "userStamps", user.uid);
+    const userStampRef = doc(db, "currentStamps", user.uid);
     const userStampSnap = await getDoc(userStampRef);
 
     if (userStampSnap.exists() && userStampSnap.data()[text]) {
@@ -61,12 +60,12 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: auto;
+  height: 100vh;
   background-color: white;
 }
 
 img {
-  width: 100px;
+  max-width: 100%;
   height: auto;
 }
 </style>
