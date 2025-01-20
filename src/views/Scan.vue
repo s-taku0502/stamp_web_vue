@@ -21,7 +21,7 @@
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader';
 import { auth, db } from "../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { checkAuthAndRedirect } from "@/utils/auth";
 
 export default {
@@ -56,15 +56,23 @@ export default {
         // 文字列が空かどうかチェック
         if (typeof text === "string" && text.trim() !== "") {
           // Firestoreにスタンプ情報を保存
-          const userStampRef = doc(db, "userStamps", user.uid);
-          await setDoc(userStampRef, { [text]: true }, { merge: true });
+          const userStampRef = doc(db, "currentStamps", user.uid);
+          const userStampSnap = await getDoc(userStampRef);
 
-          // 次の画面に遷移
-          try {
-            this.$router.push({ name: "CurrentStamps", query: { text } });
-          } catch (error) {
-            console.error("画面遷移に失敗しました: ", error);
-            alert(`${text}: 画面遷移に失敗しました`);
+          if (userStampSnap.exists() && userStampSnap.data()[text]) {
+            console.log("スタンプは既に存在します。");
+            alert("このスタンプは既に取得済みです。");
+          } else {
+            await setDoc(userStampRef, { [text]: true }, { merge: true });
+            console.log("スタンプを保存しました。");
+
+            // 次の画面に遷移
+            try {
+              this.$router.push({ name: "CurrentStamps", query: { text } });
+            } catch (error) {
+              console.error("画面遷移に失敗しました: ", error);
+              alert(`${text}: 画面遷移に失敗しました`);
+            }
           }
         } else {
           console.error("QRコードの内容が無効です:", text);
