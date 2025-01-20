@@ -1,7 +1,7 @@
 // 必要なライブラリをインポート
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 // Firebaseの設定
 const firebaseConfig = {
@@ -14,7 +14,6 @@ const firebaseConfig = {
   measurementId: "G-WZ2GHT12EV",
 };
 
-
 // Firebaseの初期化
 const app = initializeApp(firebaseConfig);
 
@@ -24,17 +23,5 @@ const auth = getAuth(app);
 // Firestoreの初期化
 const db = getFirestore(app);
 
-// 非同期処理の例
-const fetchUsers = async () => {
-  try {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-    });
-  } catch (error) {
-    console.error("Error fetching users: ", error);
-  }
-};
-
 // 必要なオブジェクトをエクスポート
-export { auth, db, fetchUsers };
+export { auth, db };
