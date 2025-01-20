@@ -35,7 +35,7 @@ export default {
       console.log("成功");
     } else {
       console.error("No such document!");
-      console.error(`反映先：${`https://firebasestorage.googleapis.com/v0/b/kanazawa-nuka2024.firebasestorage.app/o/stamps%2F${text}.webp?alt=media`}`);
+      // console.error(`反映先：${`https://firebasestorage.googleapis.com/v0/b/kanazawa-nuka2024.firebasestorage.app/o/stamps%2F${text}.webp?alt=media`}`);
     }
   }
 };
@@ -52,7 +52,7 @@ export default {
 }
 
 img {
-  max-width: 100%;
+  max-width: 100px;
   height: auto;
 }
 </style>
