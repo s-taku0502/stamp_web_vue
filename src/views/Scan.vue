@@ -20,8 +20,6 @@
 
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader';
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { checkAuthAndRedirect } from "@/utils/auth";
 
@@ -42,57 +40,29 @@ export default {
       this.scanning = false;
       console.log("decodedText:", decodedText); // デバッグ情報を出力
 
-      const db = getFirestore();
       const user = auth.currentUser;
 
-      // decodedTextが配列の場合、最初の要素を取り出す
+      // QRコードの内容が配列の場合、最初の要素を取得
       if (Array.isArray(decodedText)) {
         decodedText = decodedText[0];
       }
 
-      // decodedTextの詳細な内容を出力
-      if (typeof decodedText === 'object') {
-        for (const key in decodedText) {
-          if (decodedText.hasOwnProperty(key)) {
-            console.log(`${key}: ${decodedText[key]}`);
-          }
-        }
-      }
-
-      // decodedTextの適切なプロパティを確認
-      let text = typeof decodedText === 'string' ? decodedText : decodedText.rawValue;
-      console.log("text:", text); // デバッグ情報を出力
+      // QRコード内容の詳細を確認
+      let text = typeof decodedText === "string" ? decodedText : decodedText.rawValue;
+      console.log("text:", text);
 
       if (user) {
-        // textが文字列であることを確認
-        if (typeof text === 'string') {
-          const stampDocRef = doc(db, "stamps", text);
-          const stampDoc = await getDoc(stampDocRef);
-
-          if (stampDoc.exists()) {
-            const stampData = stampDoc.data();
-            console.log("stampData:", stampData); // デバッグ情報を出力
-
-            // gs:// URLを処理するために、Firebase Storageの参照を作成
-            const storage = getStorage();
-            const storageRef = ref(storage, stampData.imageUrl.replace('gs://kanazawa-nuka2024.firebasestorage.app/', ''));
-            console.log("storageRef:", storageRef); // デバッグ情報を出力
-
-            try {
-              const imageUrl = await getDownloadURL(storageRef);
-              console.log("imageUrl:", imageUrl); // デバッグ情報を出力
-              this.$emit('image-scanned', imageUrl);
-              const decodedImageUrl = decodeURIComponent(imageUrl);
-              this.$router.push({ name: "CurrentStamps", params: { imageUrl: decodedImageUrl } });
-            } catch (error) {
-              console.error("画像のダウンロードに失敗しました: ", error);
-              alert(`${text}: 画像のダウンロードに失敗しました`);
-            }
-          } else {
-            alert(`${text}: 無効なQRコードです`);
+        // 文字列が空かどうかチェック
+        if (typeof text === "string" && text.trim() !== "") {
+          // 次の画面に遷移
+          try {
+            this.$router.push({ name: "CurrentStamps", query: { text } });
+          } catch (error) {
+            console.error("画面遷移に失敗しました: ", error);
+            alert(`${text}: 画面遷移に失敗しました`);
           }
         } else {
-          console.error("QRコードの内容が無効です: ", text);
+          console.error("QRコードの内容が無効です:", text);
           alert(`${text}: 無効なQRコードです`);
         }
       } else {

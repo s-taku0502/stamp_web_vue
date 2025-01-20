@@ -1,78 +1,57 @@
 <template>
-  <div>
-    <h1>イベント期間中のスタンプ</h1>
-    <div class="stamps-container">
-      <div class="stamp" v-if="imageUrl">
-        <img :src="imageUrl" alt="Stamp Image">
-      </div>
-    </div>
-    <div v-if="stamps.length > 0">
-      <h2>取得したスタンプ</h2>
-      <div class="stamps-container">
-        <div v-for="stamp in stamps" :key="stamp.id" class="stamp">
-          <img :src="stamp.imageUrl" alt="Stamp Image" />
-          <p>{{ stamp.timestamp.toDate().toLocaleString() }}</p>
-        </div>
-      </div>
-    </div>
+  <div id="CurrentStamps">
+    <h1>スタンプ画像</h1>
+    <img v-if="imageUrl" :src="imageUrl" :alt="description" />
   </div>
 </template>
 
 <script>
-import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
-import { auth } from "../firebase";
-import { checkAuthAndRedirect } from "@/utils/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 export default {
-  name: "CurrentStamps",
-  props: {
-    imageUrl: {
-      type: String,
-      required: true
-    }
-  },
+  name: 'CurrentStamps',
   data() {
     return {
-      stamps: [],
-      eventStartDate: new Date('2025-01-01'),
-      eventEndDate: new Date('2025-12-31'),
-      imageUrl: this.$route.params.imageUrl || null
+      imageUrl: null,
+      description: null,
+      error: null,
     };
   },
-  methods: {
-    async fetchStamps() {
-      const db = getFirestore();
-      const user = auth.currentUser;
-      if (user) {
-        const stampsCollection = collection(db, "stamps", user.uid, "userStamps");
-        const q = query(stampsCollection, where("timestamp", ">=", this.eventStartDate), where("timestamp", "<=", this.eventEndDate));
-        const stampDocs = await getDocs(q);
-        this.stamps = stampDocs.docs.map(doc => doc.data());
-      }
-    },
-  },
   async created() {
-    await checkAuthAndRedirect(this.$router);
-    this.fetchStamps();
+    const db = getFirestore();
+    const text = this.$route.query.text; // QRコードから読み取った文字列
+    if (!text) {
+      console.error("QRコードの内容が無効です。");
+      return;
+    }
+    console.log("読み取った文字列:", text); // デバッグ情報を出力
+    const docRef = doc(db, "stamps", text);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      this.description = docSnap.data().description;
+      console.log("Document data:", docSnap.data());
+      this.imageUrl = `https://firebasestorage.googleapis.com/v0/b/kanazawa-nuka2024.firebasestorage.app/o/stamps%2F${text}.webp?alt=media`;
+      console.log("成功");
+    } else {
+      console.error("No such document!");
+      console.error(`反映先：${`https://firebasestorage.googleapis.com/v0/b/kanazawa-nuka2024.firebasestorage.app/o/stamps%2F${text}.webp?alt=media`}`);
+    }
   }
 };
 </script>
 
 <style scoped>
-.stamps-container {
-  display: flex;
-  flex-wrap: wrap;
+#CurrentStamps {
+  /* display: flex; */
+  /* flex-direction: column; */
+  align-items: center;
+  /* justify-content: center; */
+  height: auto;
+  background-color: white;
 }
-.stamp {
-  margin: 10px;
-  text-align: center;
-}
-.stamp img {
-  width: 100px;
-  height: 100px;
-}
+
 img {
-  margin-top: 20px;
   max-width: 100%;
   height: auto;
 }
