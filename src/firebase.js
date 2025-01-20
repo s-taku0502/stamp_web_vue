@@ -1,6 +1,5 @@
 // 必要なライブラリをインポート
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 
@@ -15,9 +14,9 @@ const firebaseConfig = {
   measurementId: "G-WZ2GHT12EV",
 };
 
+
 // Firebaseの初期化
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 
 // Firebase Authenticationの初期化
 const auth = getAuth(app);
