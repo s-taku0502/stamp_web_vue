@@ -56,7 +56,7 @@ export default {
 
 <style scoped>
 #CurrentStamps {
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -65,7 +65,7 @@ export default {
 }
 
 img {
-  max-width: 100%;
+  max-width: 100px;
   height: auto;
 }
 </style>
