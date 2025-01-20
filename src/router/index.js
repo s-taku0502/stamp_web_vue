@@ -15,6 +15,8 @@ import AllStamps from '@/views/AllStamps.vue';
 import CurrentStamps from '@/views/CurrentStamps.vue';
 import UserProfile from '@/views/UserProfile.vue';
 import Admin from '@/views/Admin.vue'; // 管理者画面のインポート
+// import { store } from '@/store';
+import Dummy from '@/views/Dummy.vue';
 
 const routes = [
   { path: '/home', name: 'Home', component: Home },
@@ -26,7 +28,8 @@ const routes = [
     component: Scan,
     props: (route) => ({ onScanComplete: route.query.onScanComplete }) },
   { path: '/stamps', name:'スタンプ画面', component: Stamps },
-  { path: '/current-stamps', name: '開催中のスタンプ', component: CurrentStamps },
+  { path: '/current-stamps', name: 'CurrentStamps', component: CurrentStamps },
+  // { path: '/current-stamps', name: '開催中のスタンプ', component: CurrentStamps },
   { path: '/all-stamps', name: '過去のスタンプ', component: AllStamps },
   { path: '/coupons', name: 'クーポン画面', component: Coupons },
   { path: '/stores', name: '店舗一覧', component: Stores },
@@ -37,7 +40,8 @@ const routes = [
     component: Register,
     meta: { layout: RegisterLayout },
   },
-  { path: '/:catchAll(.*)', name: 'NotFound', component: NotFound } // 404ページのルート
+  { path: '/:catchAll(.*)', name: 'NotFound', component: NotFound }, // 404ページのルート
+  { path: '/dummy', name: 'Dummy', component: Dummy },
 ];
 
 const router = createRouter({
