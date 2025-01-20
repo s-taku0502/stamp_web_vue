@@ -1,8 +1,8 @@
 // 必要なライブラリをインポート
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 // Firebaseの設定
 const firebaseConfig = {
@@ -17,15 +17,13 @@ const firebaseConfig = {
 
 // Firebaseの初期化
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 // Firebase Authenticationの初期化
 const auth = getAuth(app);
 
 // Firestoreの初期化
 const db = getFirestore(app);
-
-// Firebase Storageの初期化
-const storage = getStorage(app);
 
 // 非同期処理の例
 const fetchUsers = async () => {
@@ -40,4 +38,4 @@ const fetchUsers = async () => {
 };
 
 // 必要なオブジェクトをエクスポート
-export { auth, db, storage, fetchUsers };
+export { auth, db, fetchUsers };
