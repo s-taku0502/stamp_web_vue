@@ -20,7 +20,8 @@
 
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader';
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { checkAuthAndRedirect } from "@/utils/auth";
 
 export default {
@@ -54,6 +55,10 @@ export default {
       if (user) {
         // 文字列が空かどうかチェック
         if (typeof text === "string" && text.trim() !== "") {
+          // Firestoreにスタンプ情報を保存
+          const userStampRef = doc(db, "userStamps", user.uid);
+          await setDoc(userStampRef, { [text]: true }, { merge: true });
+
           // 次の画面に遷移
           try {
             this.$router.push({ name: "CurrentStamps", query: { text } });
