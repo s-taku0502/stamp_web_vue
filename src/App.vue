@@ -6,7 +6,7 @@
           <img id="icon" src="/assets/images/circle_app_icon.png" alt="Logo" />
           <p>額地区スタンプらり～</p>
         </div>
-        <div class="menu-toggle" ref="menuToggle" @click="toggleMenu">
+        <div class="menu-toggle" @click="toggleMenu">
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
