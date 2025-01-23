@@ -56,7 +56,7 @@ export default {
         // 文字列が空かどうかチェック
         if (typeof text === "string" && text.trim() !== "") {
           // Firestoreにスタンプ情報を保存
-          const userStampRef = doc(db, "currentStamps", user.uid);
+          const userStampRef = doc(db, "currentStamps", user.email);
           const userStampSnap = await getDoc(userStampRef);
 
           if (userStampSnap.exists() && userStampSnap.data()[text]) {
@@ -170,9 +170,11 @@ h1 {
   }
 }
 
+/*ここのコードは基本変えない*/
 img {
-  margin-top: 20px;
-  max-width: 100%;
-  height: auto;
+  margin-block-start: 20px;
+  max-inline-size: 100%;
+  block-size: auto;
 }
 </style>
+
