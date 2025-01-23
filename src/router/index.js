@@ -14,14 +14,14 @@ import Stamps from '@/views/Stamps.vue';
 import AllStamps from '@/views/AllStamps.vue';
 import CurrentStamps from '@/views/CurrentStamps.vue';
 import UserProfile from '@/views/UserProfile.vue';
-import Admin from '@/views/Admin.vue'; // 管理者画面のインポート
+// import Admin from '@/views/Admin.vue'; // 管理者画面のインポート
 // import { store } from '@/store';
 import Dummy from '@/views/Dummy.vue';
 
 const routes = [
   { path: '/home', name: 'Home', component: Home },
   { path: '/', name: 'UserProfile', component: UserProfile },
-  { path: '/admin', name: 'Admin', component: Admin }, // 管理者画面のルート
+  // { path: '/admin', name: 'Admin', component: Admin }, // 管理者画面のルート
   { path: '/login', name: 'Login', component: Login },
   { path: '/scan', 
     name: 'スキャン画面', 
