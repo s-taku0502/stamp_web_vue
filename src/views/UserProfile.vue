@@ -31,7 +31,7 @@ export default {
     };
   },
   async created() {
-    // await checkAuthAndRedirect(this.$router);
+    await checkAuthAndRedirect(this.$router);
     const auth = getAuth();
     const currentUser = auth.currentUser;
     if (currentUser) {
