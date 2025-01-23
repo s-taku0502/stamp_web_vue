@@ -29,22 +29,22 @@ export default {
       user: null,
       newDisplayName: ""
     };
-  },
-  async created() {
-    await checkAuthAndRedirect(this.$router);
-    const auth = getAuth();
-    const currentUser = auth.currentUser;
-    if (currentUser) {
-      const db = getFirestore();
-      const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-      if (userDoc.exists()) {
-        this.user = userDoc.data();
-        // 管理者権限のチェック
-        await checkAdminAndRedirect(this.$router);
-      } else {
-        console.error("ユーザードキュメントが存在しません");
-      }
-    }
+  // },
+  // async created() {
+  //   await checkAuthAndRedirect(this.$router);
+  //   const auth = getAuth();
+  //   const currentUser = auth.currentUser;
+  //   if (currentUser) {
+  //     const db = getFirestore();
+  //     const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+  //     if (userDoc.exists()) {
+  //       this.user = userDoc.data();
+  //       // 管理者権限のチェック
+  //       await checkAdminAndRedirect(this.$router);
+  //     } else {
+  //       console.error("ユーザードキュメントが存在しません");
+  //     }
+  //   }
   },
   methods: {
     async updateDisplayName() {
