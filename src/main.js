@@ -7,7 +7,7 @@ import { getAnalytics } from "firebase/analytics";
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-// Firebaseの設定 (Firebase Console からコピー)
+// Firebaseの設定
 const firebaseConfig = {
   apiKey: "AIzaSyCX-MwBvHlOe8hKVWFq4CrisV0MKUHwJfY",
   authDomain: "kanazawa-nuka2024.firebaseapp.com",
