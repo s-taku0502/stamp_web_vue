@@ -14,8 +14,8 @@ const firebaseConfig = {
     projectId: "kanazawa-nuka2024",
     storageBucket: "kanazawa-nuka2024.firebasestorage.app",
     messagingSenderId: "729877460278",
-    appId: "1:729877460278:web:3e388b308f1d6ad0192f97",
-    measurementId: "G-WZ2GHT12EV"
+    appId: "1:729877460278:web:7b9f69c6ae2ad402192f97",
+    measurementId: "G-WS29TRGLJ6"
 };
 
 // Firebaseの初期化
