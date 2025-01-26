@@ -59,14 +59,31 @@ export default {
           const userStampRef = doc(db, "currentStamps", user.email);
           const userStampSnap = await getDoc(userStampRef);
 
-          if (userStampSnap.exists() && userStampSnap.data()[text]) {
-            console.log("スタンプは既に存在します。");
-            alert("このスタンプは既に取得済みです。");
-          } else {
-            await setDoc(userStampRef, { [text]: true }, { merge: true });
-            console.log("スタンプを保存しました。");
+          if (userStampSnap.exists()) {
+            const userStamps = userStampSnap.data();
 
-            // 次の画面に遷移
+            // QRコードのスタンプが既に存在するか確認
+            if (userStamps && userStamps[text]) {
+              console.log("スタンプは既に存在します。");
+              alert("このスタンプは既に取得済みです。");
+            } else {
+              // 新しいスタンプをFirestoreに保存
+              await setDoc(userStampRef, { [text]: true }, { merge: true });
+              console.log("スタンプを保存しました。");
+
+              // 次の画面に遷移
+              try {
+                this.$router.push({ name: "CurrentStamps", query: { text } });
+              } catch (error) {
+                console.error("画面遷移に失敗しました: ", error);
+                alert(`${text}: 画面遷移に失敗しました`);
+              }
+            }
+          } else {
+            // スタンプデータがなかった場合、新規作成
+            await setDoc(userStampRef, { [text]: true });
+            console.log("新しいスタンプを保存しました。");
+
             try {
               this.$router.push({ name: "CurrentStamps", query: { text } });
             } catch (error) {
