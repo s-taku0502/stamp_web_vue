@@ -9,13 +9,13 @@ import { getFirestore } from 'firebase/firestore';
 
 // Firebaseの設定 (Firebase Console からコピー)
 const firebaseConfig = {
-    apiKey: "AIzaSyCX-MwBvHlOe8hKVWFq4CrisV0MKUHwJfY",
-    authDomain: "kanazawa-nuka2024.firebaseapp.com",
-    projectId: "kanazawa-nuka2024",
-    storageBucket: "kanazawa-nuka2024.firebasestorage.app",
-    messagingSenderId: "729877460278",
-    appId: "1:729877460278:web:7b9f69c6ae2ad402192f97",
-    measurementId: "G-WS29TRGLJ6"
+  apiKey: "AIzaSyCX-MwBvHlOe8hKVWFq4CrisV0MKUHwJfY",
+  authDomain: "kanazawa-nuka2024.firebaseapp.com",
+  projectId: "kanazawa-nuka2024",
+  storageBucket: "kanazawa-nuka2024.firebasestorage.app",
+  messagingSenderId: "729877460278",
+  appId: "1:729877460278:web:3e388b308f1d6ad0192f97",
+  measurementId: "G-WZ2GHT12EV"
 };
 
 // Firebaseの初期化
