@@ -1,28 +1,9 @@
 <template>
-    <!-- <div>
-      <header>
-        <nav class="navbar">
-          <div class="logo">
-            <img id="icon" src="@/assets/images/circle_app_icon.png" alt="アプリアイコン">
-            <p>額地区スタンプらり～</p>
-          </div>
-          <!-- ナビゲーションリンク
-          <ul class="nav-links" id="nav-links">
-            <li><router-link to="/home">ホーム</router-link></li>
-            <li><router-link to="/scan">スキャナー</router-link></li>
-            <li><router-link to="/stamps">スタンプ</router-link></li>
-            <li><router-link to="/coupons">クーポン</router-link></li>
-            <li><router-link to="/stores">店舗情報</router-link></li>
-            <li><router-link to="/contact">お問い合わせ</router-link></li>
-          </ul>
-        </nav>
-      </header> -->
-      <main>
-        <h1>404 Not Found</h1>
-        <p>お探しのページが見つかりませんでした。</p>
-      </main>
-    <!-- </div> -->
-  </template>
+  <main>
+    <h1>404 Not Found</h1>
+    <p>お探しのページが見つかりませんでした。</p>
+  </main>
+</template>
   
   <script>
   export default {
