@@ -75,6 +75,7 @@ export default {
         }
       } else {
         console.error("ユーザーが認証されていません。");
+        this.$router.push('/login'); // ログイン画面にリダイレクト
         this.isLoading = false; // ローディング終了
       }
     });
