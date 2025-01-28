@@ -5,13 +5,13 @@ import { getFirestore } from "firebase/firestore";
 
 // Firebaseの設定
 const firebaseConfig = {
-  apiKey: "AIzaSyCX-MwBvHlOe8hKVWFq4CrisV0MKUHwJfY",
-  authDomain: "kanazawa-nuka2024.firebaseapp.com",
-  projectId: "kanazawa-nuka2024",
-  storageBucket: "kanazawa-nuka2024.firebasestorage.app",
-  messagingSenderId: "729877460278",
-  appId: "1:729877460278:web:3e388b308f1d6ad0192f97",
-  measurementId: "G-WZ2GHT12EV",
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  measurementId: process.env.VUE_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 // Firebaseの初期化
