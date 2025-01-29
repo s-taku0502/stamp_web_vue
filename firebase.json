@@ -28,5 +28,14 @@
         "echo 'Skipping eslint check'"
       ]
     }
-  ]
+  ],
+  "hosting": {
+    "public": "dist",
+    "/":"vue.js のビルド後の出力フォルダを指定",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
 }
