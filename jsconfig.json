@@ -1,19 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "baseUrl": "./",
-    "moduleResolution": "node",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    },
+    "target": "es5",                           // JavaScript のターゲットバージョン
+    "module": "esnext",                        // モジュールシステム
+    "baseUrl": "./",                           // 基本パス
+    "moduleResolution": "node",                // Node.jsスタイルでのモジュール解決
     "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
+      "esnext",                                // 最新のES機能
+      "dom",                                   // DOM関連の型
+      "dom.iterable",                          // DOM iterable型
+      "scripthost"                             // スクリプトホスト関連の型
     ]
-  }
+  },
+  "include": [
+    "src/**/*.js"                             // JavaScript のソースコードファイル
+  ]
 }
