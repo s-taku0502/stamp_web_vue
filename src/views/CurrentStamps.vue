@@ -18,16 +18,29 @@
 
 <script>
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { useStampStore } from "@/store/stampStore";
+import { onMounted, ref } from "vue";
 
 export default {
   name: "CurrentStamps",
+  setup() {
+    const stampStore = useStampStore();
+    const isLoading = ref(true);
+
+    onMounted(() => {
+      stampStore.loadCachedStamps(); // まずローカルストレージのデータを表示
+      stampStore.subscribeToStamps(); // Firestore のリアルタイム監視を開始
+      isLoading.value = false;
+    });
+
+    return { stampStore, isLoading };
+  },
   data() {
     return {
       stamps: [],
-      isLoading: true, // ローディング状態の追加
     };
   },
   methods: {
@@ -41,7 +54,7 @@ export default {
         const stampSnap = await getDoc(stampRef);
         if (stampSnap.exists()) {
           const stampData = stampSnap.data();
-          const imageUrl = await getDownloadURL(ref(storage, `stamps/${id}.webp`));
+          const imageUrl = await getDownloadURL(storageRef(storage, `stamps/${id}.webp`));
           return { id, ...stampData, imageUrl };
         }
         return null;
@@ -82,6 +95,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 #CurrentStamps {
