@@ -10,6 +10,9 @@
         <p>{{ stamp.description }}</p>
       </div>
     </div>
+    <div v-else-if="!isLoading">
+      <p></p>
+    </div>
     <div v-else>
       <p>スタンプがありません。</p>
     </div>
