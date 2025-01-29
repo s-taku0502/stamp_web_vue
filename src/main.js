@@ -1,7 +1,8 @@
 import { createApp } from 'vue';
+import { createPinia } from "pinia";
+import { initializeApp } from "firebase/app";
 import App from './App.vue';
 import router from './router';
-import { initializeApp } from "firebase/app";
 import store from './store';
 
 // Firebaseの設定
@@ -21,9 +22,15 @@ initializeApp(firebaseConfig);
 // アプリケーションの作成
 const app = createApp(App);
 
+// Pinia の初期化
+const pinia = createPinia();
+
 // プラグインの登録
 app.use(router);
 app.use(store); // Vuex を登録
+
+// Pinia を登録
+app.use(pinia);
 
 // アプリケーションのマウント
 app.mount('#app');
