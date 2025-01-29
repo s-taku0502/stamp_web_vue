@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { QrcodeStream } from 'vue-qrcode-reader';
+import { store } from '@/store';
 
 import RegisterLayout from '@/layouts/RegisterLayout.vue';
 import Login from '@/views/Login.vue';
@@ -14,34 +15,47 @@ import Stamps from '@/views/Stamps.vue';
 import AllStamps from '@/views/AllStamps.vue';
 import CurrentStamps from '@/views/CurrentStamps.vue';
 import UserProfile from '@/views/UserProfile.vue';
-// import Admin from '@/views/Admin.vue'; // 管理者画面のインポート
-// import { store } from '@/store';
+import PrivacyPolicy from '@/views/PrivacyPolicy.vue';
 import Dummy from '@/views/Dummy.vue';
 
 const routes = [
+  // Home
   { path: '/home', name: 'Home', component: Home },
+  // Profile
   { path: '/', name: 'UserProfile', component: UserProfile },
-  // { path: '/admin', name: 'Admin', component: Admin }, // 管理者画面のルート
-  { path: '/login', name: 'Login', component: Login },
+  // Scan
   { path: '/scan', 
     name: 'スキャン画面', 
     component: Scan,
     props: (route) => ({ onScanComplete: route.query.onScanComplete }) },
+  // Stamps
   { path: '/stamps', name:'スタンプ画面', component: Stamps },
+  // Current stamps
   { path: '/current-stamps', name: 'CurrentStamps', component: CurrentStamps },
-  // { path: '/current-stamps', name: '開催中のスタンプ', component: CurrentStamps },
+  // All stamps
   { path: '/all-stamps', name: '過去のスタンプ', component: AllStamps },
+  // Coupons
   { path: '/coupons', name: 'クーポン画面', component: Coupons },
+  // Stores
   { path: '/stores', name: '店舗一覧', component: Stores },
+  // Contact
   { path: '/contact', name: 'お問い合わせ', component: Contact },
+
+  // Register
   {
     path: '/register',
     name: '新規登録',
     component: Register,
     meta: { layout: RegisterLayout },
   },
-  { path: '/:catchAll(.*)', name: 'NotFound', component: NotFound }, // 404ページのルート
+  // Login
+  { path: '/login', name: 'Login', component: Login },
+  // Not Found
+  { path: '/:catchAll(.*)', name: 'NotFound', component: NotFound },
+  // Dummy
   { path: '/dummy', name: 'Dummy', component: Dummy },
+  // Privacy Policy
+  { path: '/privacy-policy', name: 'PrivacyPolicy', component: PrivacyPolicy },
 ];
 
 const router = createRouter({
