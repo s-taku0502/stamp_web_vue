@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import { initializeApp } from "firebase/app";
+import store from './store';
 
 // Firebaseの設定
 const firebaseConfig = {
@@ -17,4 +18,12 @@ const firebaseConfig = {
 // Firebaseの初期化
 initializeApp(firebaseConfig);
 
-createApp(App).use(router).mount('#app');
+// アプリケーションの作成
+const app = createApp(App);
+
+// プラグインの登録
+app.use(router);
+app.use(store); // Vuex を登録
+
+// アプリケーションのマウント
+app.mount('#app');
