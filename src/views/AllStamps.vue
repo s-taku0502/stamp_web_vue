@@ -30,7 +30,7 @@ export default {
       const db = getFirestore();
       const user = auth.currentUser;
       if (user) {
-        const stampsCollection = collection(db, "stamps", user.uid, "userStamps");
+        const stampsCollection = collection(db, "users", user.uid, "userStamps");
         const stampDocs = await getDocs(stampsCollection);
         this.stamps = stampDocs.docs.map(doc => doc.data());
       }
