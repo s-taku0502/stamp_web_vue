@@ -1,8 +1,8 @@
 <template>
   <div id="Stamps">
     <div class="tabs">
-      <button @click="currentTab = 'current'">Current Stamps</button>
-      <button @click="currentTab = 'all'">All Stamps</button>
+      <button @click="currentTab = 'current'">開催期間中に取得したスタンプ</button>
+      <button @click="currentTab = 'all'">過去に取得したスタンプ</button>
     </div>
     <div class="tab-content">
       <CurrentStamps v-if="currentTab === 'current'" />
