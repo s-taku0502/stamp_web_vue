@@ -56,19 +56,20 @@ export default {
         // 文字列が空かどうかチェック
         if (typeof text === "string" && text.trim() !== "") {
           // Firestoreにスタンプ情報を保存
-          const userStampRef = doc(db, "currentStamps", user.email);
+          const userStampRef = doc(db, "users", user.uid);
           const userStampSnap = await getDoc(userStampRef);
 
           if (userStampSnap.exists()) {
-            const userStamps = userStampSnap.data();
+            const userStamps = userStampSnap.data().stamps || [];
 
             // QRコードのスタンプが既に存在するか確認
-            if (userStamps && userStamps[text]) {
+            if (userStamps.includes(text)) {
               console.log("スタンプは既に存在します。");
               alert("このスタンプは既に取得済みです。");
             } else {
               // 新しいスタンプをFirestoreに保存
-              await setDoc(userStampRef, { [text]: true }, { merge: true });
+              userStamps.push(text);
+              await setDoc(userStampRef, { stamps: userStamps }, { merge: true });
               console.log("スタンプを保存しました。");
 
               // 次の画面に遷移
@@ -81,7 +82,7 @@ export default {
             }
           } else {
             // スタンプデータがなかった場合、新規作成
-            await setDoc(userStampRef, { [text]: true });
+            await setDoc(userStampRef, { stamps: [text] });
             console.log("新しいスタンプを保存しました。");
 
             try {
@@ -194,4 +195,3 @@ img {
   block-size: auto;
 }
 </style>
-
