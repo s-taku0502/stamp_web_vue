@@ -102,6 +102,7 @@ header .p {
 }
 
 .navbar {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -168,6 +169,7 @@ header .p {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 999; /* 他の要素より前面に */
 }
 
 .nav-links.active li {

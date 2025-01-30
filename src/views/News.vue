@@ -57,6 +57,10 @@ export default {
 </script>
 
 <style scoped>
+*{
+  z-index: 10;
+}
+
 .info-box {
   align-items: center;
   border: 1px solid #444;
