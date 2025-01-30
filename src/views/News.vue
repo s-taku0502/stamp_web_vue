@@ -68,6 +68,7 @@ export default {
   position: relative;
   border-radius: 10px; /* 角を丸くする */
   padding-top: 20px; /* 上部にスペースを追加 */
+  z-index: 1; /* z-indexを追加 */
 }
 
 .news-box {
@@ -80,6 +81,7 @@ export default {
   position: relative;
   border-radius: 10px; /* 角を丸くする */
   padding: 20px; /* 内部にスペースを追加 */
+  z-index: 1; /* z-indexを追加 */
 }
 
 .title {

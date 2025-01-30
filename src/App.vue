@@ -16,7 +16,6 @@
           <li><router-link to="/home">ホーム</router-link></li>
           <li><router-link to="/scan">スキャナー</router-link></li>
           <li><router-link to="/stamps">スタンプ</router-link></li>
-          <!-- <li><router-link to="/current-stamps">スタンプ</router-link></li> -->
           <li><router-link to="/coupons">クーポン</router-link></li>
           <li><router-link to="/stores">店舗情報</router-link></li>
           <li><router-link to="/contact">お問い合わせ</router-link></li>
@@ -92,6 +91,8 @@ header {
   padding: 0;
   width: 100%; /* 横幅を100%に設定 */
   box-sizing: border-box; /* ボックスのサイズにパディングを含める */
+  z-index: 1000; /* z-indexを追加 */
+  position: relative; /* z-indexを有効にするためにpositionを追加 */
 }
 
 header .p {
@@ -169,7 +170,7 @@ header .p {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 999; /* 他の要素より前面に */
+  z-index: 1001; /* 他の要素より前面に */
 }
 
 .nav-links.active li {
