@@ -10,9 +10,6 @@
         <p>{{ stamp.description }}</p>
       </div>
     </div>
-    <div v-else-if="!isLoading">
-      <p></p>
-    </div>
     <div v-else>
       <p>スタンプがありません。</p>
     </div>
@@ -24,26 +21,13 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getStorage, ref as storageRef, getDownloadURL } from "firebase/storage";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { useStampStore } from "@/store/stampStore";
-import { onMounted, ref } from "vue";
 
 export default {
   name: "CurrentStamps",
-  setup() {
-    const stampStore = useStampStore();
-    const isLoading = ref(true);
-
-    onMounted(() => {
-      stampStore.loadCachedStamps(); // まずローカルストレージのデータを表示
-      stampStore.subscribeToStamps(); // Firestore のリアルタイム監視を開始
-      isLoading.value = false;
-    });
-
-    return { stampStore, isLoading };
-  },
   data() {
     return {
       stamps: [],
+      isLoading: true,
     };
   },
   methods: {
@@ -71,12 +55,12 @@ export default {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const db = getFirestore();
-        const userStampRef = doc(db, "currentStamps", user.email);
+        const userStampRef = doc(db, "users", user.uid);
 
         try {
           const userStampSnap = await getDoc(userStampRef);
           if (userStampSnap.exists()) {
-            const stampIds = Object.keys(userStampSnap.data());
+            const stampIds = userStampSnap.data().stamps || [];
             const stamps = await Promise.all(
               stampIds.map((id) => this.fetchStampData(id))
             );
@@ -98,7 +82,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 #CurrentStamps {
