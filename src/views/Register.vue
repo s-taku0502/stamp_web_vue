@@ -34,62 +34,6 @@
   </div>
 </template>
 
-<style scoped>
-#register {
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-div {
-  margin-bottom: 10px;
-}
-
-.register {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.register h1 {
-  text-align: center;
-}
-
-form div {
-  margin-bottom: 15px;
-}
-
-form label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-form input {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-.error-message {
-  color: red;
-  margin-top: 10px;
-  text-align: center;
-}
-</style>
-
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
@@ -151,5 +95,60 @@ export default {
     },
   },
 };
-
 </script>
+
+<style scoped>
+#register {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+div {
+  margin-bottom: 10px;
+}
+
+.register {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.register h1 {
+  text-align: center;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+form input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
+</style>
