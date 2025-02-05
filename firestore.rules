@@ -37,7 +37,7 @@ service cloud.firestore {
 service firebase.storage {
   match /b/{bucket}/o {
     match /{allPaths=**} {
-      allow read, write: if request.time < timestamp.date(2025, 2, 19) and request.auth != null;
+      allow read, write: if true;
     }
   }
 }
