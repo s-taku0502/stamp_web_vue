@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-else>
-      <p>スタンプがありません。</p>
+      <p>スタンプは所持していません。</p>
     </div>
   </div>
 </template>
