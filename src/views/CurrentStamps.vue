@@ -41,10 +41,14 @@ export default {
         const stampSnap = await getDoc(stampRef);
         if (stampSnap.exists()) {
           const stampData = stampSnap.data();
+          // console.log("取得したスタンプデータ:", stampData); // デバッグ用
           const imageUrl = await getDownloadURL(storageRef(storage, `stamps/${id}.webp`));
+          // console.log("取得した画像 URL:", imageUrl); // デバッグ用
           return { id, ...stampData, imageUrl };
+        } else {
+          console.error(`スタンプデータが見つかりません: ${id}`); // デバッグ用
+          return null;
         }
-        return null;
       } catch (error) {
         console.error(`Error fetching stamp data for ID ${id}:`, error);
         return null;
@@ -61,12 +65,14 @@ export default {
           const userStampSnap = await getDoc(userStampRef);
           if (userStampSnap.exists()) {
             const stampIds = userStampSnap.data().stamps || [];
+            // console.log("取得したスタンプID:", stampIds); // デバッグ用
             const stamps = await Promise.all(
               stampIds.map((id) => this.fetchStampData(id))
             );
             this.stamps = stamps.filter((stamp) => stamp !== null);
+            console.log("取得したスタンプ:", this.stamps); // デバッグ用
           } else {
-            console.warn("スタンプ情報が見つかりません。");
+            // console.warn("スタンプ情報が見つかりません。"); // デバッグ用
           }
         } catch (error) {
           console.error("Error fetching user stamps:", error);
@@ -74,7 +80,7 @@ export default {
           this.isLoading = false; // ローディング終了
         }
       } else {
-        console.error("ユーザーが認証されていません。");
+        console.error("ユーザーが認証されていません。"); // デバッグ用
         this.$router.push('/login'); // ログイン画面にリダイレクト
         this.isLoading = false; // ローディング終了
       }
