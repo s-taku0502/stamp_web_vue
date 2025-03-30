@@ -1,24 +1,24 @@
 <template>
   <div id="Stamps">
     <div class="tabs">
-      <button @click="currentTab = 'current'">開催期間中に取得したスタンプ</button>
-      <button @click="currentTab = 'all'">過去に取得したスタンプ</button>
+      <!-- <button @click="currentTab = 'current'">開催期間中に取得したスタンプ</button> -->
+      <!-- <button @click="currentTab = 'all'">過去に取得したスタンプ</button> -->
     </div>
     <div class="tab-content">
       <CurrentStamps v-if="currentTab === 'current'" />
-      <AllStamps v-if="currentTab === 'all'" />
+      <!-- <AllStamps v-if="currentTab === 'all'" /> -->
     </div>
   </div>
 </template>
 
 <script>
 import CurrentStamps from '@/views/CurrentStamps.vue';
-import AllStamps from '@/views/AllStamps.vue';
+// import AllStamps from '@/views/AllStamps.vue';
 
 export default {
   components: {
     CurrentStamps,
-    AllStamps
+    // AllStamps
   },
   data() {
     return {
