@@ -25,17 +25,22 @@ export default {
       newsList: []
     };
   },
-  async created() {
+  created() {
     const db = getFirestore();
-    const querySnapshot = await getDocs(collection(db, "news"));
-    this.newsList = querySnapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        ...data,
-        endDate: data.endDate.toDate ? data.endDate.toDate() : new Date(data.endDate)
-      };
-    });
+    getDocs(collection(db, "news"))
+      .then((querySnapshot) => {
+        this.newsList = querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            endDate: data.endDate.toDate ? data.endDate.toDate() : new Date(data.endDate)
+          };
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching news:", error);
+      });
   },
   computed: {
     validNewsList() {
