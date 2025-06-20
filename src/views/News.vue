@@ -7,7 +7,7 @@
         <div v-for="news in validNewsList" :key="news.id" class="news-item">
           <p class="content">{{ news.content }}</p>
           <p class="organization">投稿団体: {{ news.organization }}</p>
-          <p class="period">終了日: {{ formatDate(news.endDate) }}</p>
+          <p class="period">掲載終了日: {{ formatDate(news.endDate) }}</p>
         </div>
       </div>
     </div>
