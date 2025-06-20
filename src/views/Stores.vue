@@ -7,13 +7,19 @@
 
     <!-- 検索結果 -->
     <div v-if="filteredStores.length > 0">
-      <div v-for="(store, index) in filteredStores" :key="index" class="store-info">
+      <div v-for="store in filteredStores" :key="store.id" class="store-info">
+        <img v-if="store.imageUrl" :src="store.imageUrl" :alt="store.name" class="store-image">
         <h2>{{ store.name }}</h2>
         <p><strong>住所:</strong> {{ store.address }}</p>
-        <p><strong>営業時間:</strong> {{ store.hours }}</p>
-        <p><strong>連絡先:</strong> {{ store.contact }}</p>
-        <p><strong>特徴:</strong> {{ store.features }}</p>
-        <p><strong>スタンプラリー特典:</strong> {{ store.reward }}</p>
+        <p><strong>業種:</strong> {{ store.industry }}</p>
+        <p><strong>特徴:</strong> {{ store.company_features }}</p>
+        <p><strong>説明:</strong> {{ store.description }}</p>
+        <p v-if="store.website_url">
+          <strong>Webサイト:</strong> 
+          <a :href="store.website_url" target="_blank" rel="noopener noreferrer">
+            {{ store.website_url }}
+          </a>
+        </p>
       </div>
     </div>
     
@@ -51,8 +57,7 @@ export default {
         const querySnapshot = await getDocs(collection(db, "stores"));
         this.stores = querySnapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data(),
-          keywords: doc.data().keywords || [] // keywordsが存在しない場合は空配列
+          ...doc.data()
         }));
       } catch (error) {
         console.error("Error fetching stores:", error);
@@ -71,16 +76,11 @@ export default {
       }
       
       return this.stores.filter(store => {
-        const storeName = (store.name || "").toLowerCase();
-        const storeAddress = (store.address || "").toLowerCase();
-        const storeKeywords = (store.keywords || []).map(keyword => 
-          keyword.toLowerCase()
-        );
-        
         return (
-          storeName.includes(query) ||
-          storeAddress.includes(query) ||
-          storeKeywords.some(keyword => keyword.includes(query))
+          (store.name || "").toLowerCase().includes(query) ||
+          (store.address || "").toLowerCase().includes(query) ||
+          (store.industry || "").toLowerCase().includes(query) ||
+          (store.description || "").toLowerCase().includes(query)
         );
       });
     }
@@ -89,11 +89,20 @@ export default {
 </script>
 
 <style scoped>
+.store-image {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
 .store-info {
   margin-bottom: 20px;
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .store-info h2 {
@@ -106,6 +115,15 @@ export default {
   margin: 5px 0;
   font-size: 1rem;
   color: #000; /* 本文のテキストを黒に */
+}
+
+.store-info a {
+  color: #2196F3;
+  text-decoration: none;
+}
+
+.store-info a:hover {
+  text-decoration: underline;
 }
 
 /* エラーメッセージ用のスタイルを修正 */
