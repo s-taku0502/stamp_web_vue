@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Stores Page</h1>
+    <h1 class="text-center">店舗情報</h1>
     
     <!-- SearchBar コンポーネントのインポート -->
     <SearchBar :searchQuery="searchQuery" @update:searchQuery="updateSearchQuery" />
@@ -182,5 +182,13 @@ export default {
 /* 通常のテキストスタイル */
 div > p {
   color: #000;
+}
+
+/* h1の中央揃えスタイル */
+h1{
+  text-align: center;
+  margin: 20px 0;
+  color: #333;
+  font-size: 2rem;
 }
 </style>
