@@ -18,13 +18,26 @@
       <div v-if="inquiryType !== 'パスワード再設定'">
         <div>
           <label for="name">ユーザー名</label>
-          <input type="text" v-model="name" required />
+          <input 
+            type="text" 
+            v-model="name" 
+            required 
+            :disabled="isLoggedIn"
+            :class="{ 'disabled-input': isLoggedIn }"
+          />
         </div>
       </div>
 
       <div>
-        <label for="email">メールアドレス</label><a style="color: red;">登録したメールアドレスを入力してください。</a>
-        <input type="email" v-model="email" required />
+        <label for="email">メールアドレス</label>
+        <a v-if="!isLoggedIn" style="color: red;">登録したメールアドレスを入力してください。</a>
+        <input 
+          type="email" 
+          v-model="email" 
+          required 
+          :disabled="isLoggedIn"
+          :class="{ 'disabled-input': isLoggedIn }"
+        />
       </div>
 
       <div v-if="inquiryType !== 'パスワード再設定'">
@@ -50,13 +63,15 @@ export default {
       inquiryType: "",
       name: "",
       email: "",
-      message: ""
+      message: "",
+      isLoggedIn: false // ログイン状態を追加
     };
   },
   async created() {
     const auth = getAuth();
     const currentUser = auth.currentUser;
     if (currentUser) {
+      this.isLoggedIn = true; // ログイン状態を設定
       const db = getFirestore();
       const userDoc = await getDoc(doc(db, "users", currentUser.uid));
       if (userDoc.exists()) {
@@ -143,5 +158,18 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+.disabled-input {
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
+  border: 1px solid #ddd;
+  opacity: 0.7;
+}
+
+input:disabled {
+  -webkit-text-fill-color: #666; /* Safari対応 */
+  color: #666;
 }
 </style>
