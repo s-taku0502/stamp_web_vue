@@ -7,19 +7,33 @@
 
     <!-- 検索結果 -->
     <div v-if="filteredStores.length > 0">
-      <div v-for="(store, index) in filteredStores" :key="index" class="store-info">
+      <div v-for="store in filteredStores" :key="store.id" class="store-info">
+        <div class="image-container">
+          <img 
+            v-if="store.imageUrl" 
+            :src="store.imageUrl" 
+            :alt="store.name" 
+            class="store-image"
+            @error="handleImageError"
+          >
+        </div>
         <h2>{{ store.name }}</h2>
         <p><strong>住所:</strong> {{ store.address }}</p>
-        <p><strong>営業時間:</strong> {{ store.hours }}</p>
-        <p><strong>連絡先:</strong> {{ store.contact }}</p>
-        <p><strong>特徴:</strong> {{ store.features }}</p>
-        <p><strong>スタンプラリー特典:</strong> {{ store.reward }}</p>
+        <p><strong>業種:</strong> {{ store.industry }}</p>
+        <p><strong>特徴:</strong> {{ store.company_features }}</p>
+        <p><strong>説明:</strong> {{ store.description }}</p>
+        <p v-if="store.website_url">
+          <strong>Webサイト:</strong> 
+          <a :href="store.website_url" target="_blank" rel="noopener noreferrer">
+            {{ store.website_url }}
+          </a>
+        </p>
       </div>
     </div>
     
     <!-- 店舗が見つからない場合のエラーメッセージ -->
     <div v-else>
-      <p>店舗が見つかりませんでした。</p>
+      <p class="error-message">店舗が見つかりませんでした。</p>
     </div>
   </div>
 </template>
@@ -27,6 +41,9 @@
 <script>
 // SearchBar コンポーネントをインポート
 import SearchBar from './SearchBar.vue';
+import { collection, getDocs } from 'firebase/firestore';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { db } from '@/firebase'; // Firebaseの設定ファイルからdbをインポート
 
 export default {
   name: "Stores",
@@ -35,67 +52,103 @@ export default {
   },
   data() {
     return {
-      searchQuery: "", // 検索用のクエリ
-      stores: [
-        {
-          name: "店舗A",
-          address: "東京都渋谷区1-2-3",
-          hours: "10:00～18:00（定休日：水曜日）",
-          contact: "03-1234-5678",
-          features: "オリジナル商品を取り扱い",
-          reward: "スタンプ1つで10%割引",
-          keywords: ["てんぽえー", "てんぽA", "とうきょうとしぶやく"]
-        },
-        {
-          name: "店舗B",
-          address: "大阪府大阪市北区4-5-6",
-          hours: "9:00～17:00（定休日：火曜日）",
-          contact: "06-9876-5432",
-          features: "地元の特産品を販売",
-          reward: "スタンプ1つで無料ドリンク",
-          keywords: ["おおさか", "おおさかしきた"]
-        }
-      ]
+      searchQuery: "",
+      stores: []  // 空の配列として初期化
     };
+  },
+  created() {
+    // コンポーネント作成時にFirestoreからデータを取得
+    this.fetchStores();
+  },
+  methods: {
+    async fetchStores() {
+      try {
+        const storage = getStorage();
+        const querySnapshot = await getDocs(collection(db, "stores"));
+        
+        // Promise.allを使用して並行して画像URLを取得
+        this.stores = await Promise.all(
+          querySnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            let imageUrl = null;
+            
+            try {
+              const storageRef = ref(storage, `stores/${doc.id}.webp`);
+              imageUrl = await getDownloadURL(storageRef);
+            } catch (error) {
+              console.warn(`画像の取得に失敗しました: ${doc.id}`, error);
+            }
+
+            return {
+              id: doc.id,
+              ...data,
+              imageUrl: imageUrl
+            };
+          })
+        );
+      } catch (error) {
+        console.error("店舗データの取得に失敗しました:", error);
+      }
+    },
+
+    updateSearchQuery(query) {
+      this.searchQuery = query;
+    },
+    handleImageError(e) {
+      console.warn('画像の読み込みに失敗しました');
+      // 必要に応じてデフォルト画像を設定
+      e.target.style.display = 'none';
+    }
   },
   computed: {
     filteredStores() {
-      // searchQuery が文字列でない場合、空文字列に変換
       const query = (this.searchQuery || "").toLowerCase();
       
       if (query === "") {
         return this.stores;
       }
       
-      // 店舗名または住所、さらにキーワード（部分一致）で検索
       return this.stores.filter(store => {
-        const storeName = store.name.toLowerCase();
-        const storeAddress = store.address.toLowerCase();
-        const storeKeywords = store.keywords.map(keyword => keyword.toLowerCase());
-        
-        // 店舗名、住所、キーワードに部分一致する場合
         return (
-          storeName.includes(query) ||
-          storeAddress.includes(query) ||
-          storeKeywords.some(keyword => keyword.includes(query))
+          (store.name || "").toLowerCase().includes(query) ||
+          (store.address || "").toLowerCase().includes(query) ||
+          (store.industry || "").toLowerCase().includes(query) ||
+          (store.description || "").toLowerCase().includes(query)
         );
       });
-    }
-  },
-  methods: {
-    updateSearchQuery(query) {
-      this.searchQuery = query;
     }
   }
 };
 </script>
 
 <style scoped>
+.image-container {
+  width: 100%;
+  max-height: 300px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  border-radius: 8px;
+}
+
+.store-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
+}
+
+.store-image:hover {
+  transform: scale(1.05);
+}
+
 .store-info {
   margin-bottom: 20px;
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .store-info h2 {
@@ -107,11 +160,27 @@ export default {
 .store-info p {
   margin: 5px 0;
   font-size: 1rem;
+  color: #000;
 }
 
-p {
-  color: red; /* エラーメッセージを目立たせる */
+.store-info a {
+  color: #2196F3;
+  text-decoration: none;
+}
+
+.store-info a:hover {
+  text-decoration: underline;
+}
+
+/* エラーメッセージ用のスタイル */
+.error-message {
+  color: #d32f2f;
   font-size: 1.2rem;
   font-weight: bold;
+}
+
+/* 通常のテキストスタイル */
+div > p {
+  color: #000;
 }
 </style>
